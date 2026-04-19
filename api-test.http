@@ -1,3 +1,6 @@
+### Hent selskapsdata fra Brreg
+GET http://localhost:8080/api/company-data/918405119
+
 ### Opprett sak
 POST http://localhost:8080/api/cases
 Content-Type: application/json
@@ -5,11 +8,14 @@ Content-Type: application/json
 {
   "title": "Forhandling 2026",
   "negotiationYear": 2026,
-  "orgNumber": "123456789"
+  "orgNumber": "918405119"
 }
 
 ### Hent alle saker
 GET http://localhost:8080/api/cases
 
-### Analyser sak (bytt id)
+### Hent én sak
+GET http://localhost:8080/api/cases/1
+
+### Analyser sak
 GET http://localhost:8080/api/cases/1/analyze

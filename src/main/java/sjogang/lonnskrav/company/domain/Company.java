@@ -18,4 +18,19 @@ public class Company {
 
     @Column(nullable = false)
     private String name;
+
+    // 👇 NYE FELTER FRA BRREG
+
+    private String industryCode;
+    private String industryDescription;
+
+    private String organizationFormCode;
+    private String organizationFormDescription;
+
+    private Integer employees;
+
+    private Boolean bankrupt;
+    private Boolean underLiquidation;
+
+    private String businessAddress;
 }

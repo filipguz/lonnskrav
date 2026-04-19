@@ -24,9 +24,12 @@ public class NegotiationCaseService {
     public NegotiationCase createCase(CreateCaseRequest request) {
         Company company = companyRepository.findByOrgNumber(request.orgNumber())
                 .orElseGet(() -> {
+                    var snapshot = companyDataService.getCompanySnapshot(request.orgNumber());
+
                     Company c = new Company();
-                    c.setOrgNumber(request.orgNumber());
-                    c.setName("Mock Company " + request.orgNumber());
+                    c.setOrgNumber(snapshot.getOrgNumber());
+                    c.setName(snapshot.getCompanyName());
+
                     return companyRepository.save(c);
                 });
 
