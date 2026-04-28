@@ -30,6 +30,14 @@ type AnalysisResult = {
   outlookScore: number;
   competitivenessScore: number;
   recommendation: string;
+  economyRationale?: string;
+  productivityRationale?: string;
+  outlookRationale?: string;
+  competitivenessRationale?: string;
+  hasRegnskapData: boolean;
+  regnskapYear?: number;
+  valuta?: string;
+  draftText?: string;
 };
 
 type CreateCaseForm = {
@@ -50,6 +58,12 @@ function scoreLabel(score: number) {
   return "Svak";
 }
 
+function scoreBadgeClass(score: number) {
+  if (score >= 8) return "bg-emerald-100 text-emerald-700";
+  if (score >= 6) return "bg-amber-100 text-amber-700";
+  return "bg-red-100 text-red-700";
+}
+
 function recommendationLabel(value: string) {
   switch (value) {
     case "HIGH_INCREASE":
@@ -65,12 +79,10 @@ function recommendationLabel(value: string) {
 
 async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, options);
-
   if (!response.ok) {
     const text = await response.text();
     throw new Error(text || `Request failed with status ${response.status}`);
   }
-
   return response.json();
 }
 
@@ -94,26 +106,23 @@ export default function App() {
       analysis.productivityScore +
       analysis.outlookScore +
       analysis.competitivenessScore;
-    return Math.round((total / 4) * 10);
+    return (total / 4).toFixed(1);
   }, [analysis]);
 
   async function loadCases() {
     try {
       setLoadingCases(true);
       setError(null);
-
       const data = await fetchJson<NegotiationCase[]>(`${API_BASE_URL}/api/cases`);
       setCases(data);
-
       if (data.length === 0) {
         setSelectedCase(null);
         setAnalysis(null);
         return;
       }
-
       if (selectedCase) {
-        const updatedSelected = data.find((item) => item.id === selectedCase.id);
-        setSelectedCase(updatedSelected ?? data[0]);
+        const updated = data.find((item) => item.id === selectedCase.id);
+        setSelectedCase(updated ?? data[0]);
       } else {
         setSelectedCase(data[0]);
       }
@@ -128,26 +137,21 @@ export default function App() {
     try {
       setCreatingCase(true);
       setError(null);
-
       const payload = {
         title: form.title,
         negotiationYear: Number(form.negotiationYear),
         orgNumber: form.orgNumber,
       };
-
       const created = await fetchJson<NegotiationCase>(`${API_BASE_URL}/api/cases`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       setCases((prev) => [created, ...prev]);
       setSelectedCase(created);
       setAnalysis(null);
       setDraftText(
-        `Foreløpig utkast for ${created.company?.name ?? "selskapet"}. Kjør analyse for å generere anbefalt begrunnelse.`
+        `Sak opprettet for ${created.company?.name ?? "selskapet"}. Kjør analyse for å generere utkast til lønnskrav.`
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Kunne ikke opprette sak.");
@@ -160,23 +164,44 @@ export default function App() {
     try {
       setAnalyzing(true);
       setError(null);
-
       const result = await fetchJson<AnalysisResult>(
         `${API_BASE_URL}/api/cases/${caseId}/analyze`
       );
-
       setAnalysis(result);
-
-      const recommendation = recommendationLabel(result.recommendation);
-      setDraftText(
-        `Forslag til lønnskrav\n\nBasert på samlet vurdering av økonomi, produktivitet, fremtidsutsikter og konkurranseevne vurderes det å foreligge ${recommendation.toLowerCase()}. Utkastet bør suppleres med lokal innsikt, lønnsdata og prioriteringer fra forhandlingsutvalget.`
-      );
+      if (result.draftText) {
+        setDraftText(result.draftText);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Kunne ikke kjøre analyse.");
     } finally {
       setAnalyzing(false);
     }
   }
+
+  const criteriaRows = analysis
+    ? [
+        {
+          label: "Økonomi",
+          score: analysis.economyScore,
+          rationale: analysis.economyRationale,
+        },
+        {
+          label: "Produktivitet",
+          score: analysis.productivityScore,
+          rationale: analysis.productivityRationale,
+        },
+        {
+          label: "Fremtidsutsikter",
+          score: analysis.outlookScore,
+          rationale: analysis.outlookRationale,
+        },
+        {
+          label: "Konkurranseevne",
+          score: analysis.competitivenessScore,
+          rationale: analysis.competitivenessRationale,
+        },
+      ]
+    : [];
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -186,11 +211,10 @@ export default function App() {
             <div>
               <h1 className="text-2xl font-bold">Lønnskrav AI</h1>
               <p className="text-sm text-slate-500">
-                En beslutningsstøtte-applikasjon for tillitsvalgte som gjør
-                selskapsdata om til dokumenterte og begrunnede lønnskrav.
+                Beslutningsstøtte for tillitsvalgte – selskapsdata og regnskap til
+                dokumenterte lønnskrav.
               </p>
             </div>
-
             <button
               onClick={loadCases}
               disabled={loadingCases}
@@ -204,51 +228,38 @@ export default function App() {
 
       <main className="mx-auto max-w-7xl px-6 py-8">
         <div className="grid gap-6 lg:grid-cols-2">
+          {/* Opprett sak */}
           <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-xl font-semibold">Opprett ny forhandlingssak</h2>
             <p className="mt-2 text-sm text-slate-500">
-              Lag en sak og kjør analyse.
+              Søk opp selskapet og hent regnskapsdata automatisk.
             </p>
-
             <div className="mt-6 space-y-4">
               <div>
                 <label className="mb-1 block text-sm font-medium">Tittel</label>
                 <input
                   className="w-full rounded-xl border border-slate-300 px-3 py-2"
                   value={form.title}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, title: e.target.value }))
-                  }
+                  onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
                 />
               </div>
-
               <div>
                 <label className="mb-1 block text-sm font-medium">Forhandlingsår</label>
                 <input
                   className="w-full rounded-xl border border-slate-300 px-3 py-2"
                   value={form.negotiationYear}
-                  onChange={(e) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      negotiationYear: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => setForm((p) => ({ ...p, negotiationYear: e.target.value }))}
                 />
               </div>
-
               <div>
-                <label className="mb-1 block text-sm font-medium">
-                  Organisasjonsnummer
-                </label>
+                <label className="mb-1 block text-sm font-medium">Organisasjonsnummer</label>
                 <input
                   className="w-full rounded-xl border border-slate-300 px-3 py-2"
+                  placeholder="9 siffer"
                   value={form.orgNumber}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, orgNumber: e.target.value }))
-                  }
+                  onChange={(e) => setForm((p) => ({ ...p, orgNumber: e.target.value }))}
                 />
               </div>
-
               <div className="flex gap-3">
                 <button
                   onClick={createCase}
@@ -257,7 +268,6 @@ export default function App() {
                 >
                   {creatingCase ? "Oppretter..." : "Opprett sak"}
                 </button>
-
                 <button
                   onClick={loadCases}
                   disabled={loadingCases}
@@ -266,7 +276,6 @@ export default function App() {
                   Hent saker
                 </button>
               </div>
-
               {error && (
                 <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 whitespace-pre-wrap">
                   {error}
@@ -275,12 +284,10 @@ export default function App() {
             </div>
           </section>
 
+          {/* Saksliste */}
           <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-xl font-semibold">Saker</h2>
-            <p className="mt-2 text-sm text-slate-500">
-              Velg en sak og kjør analyse.
-            </p>
-
+            <p className="mt-2 text-sm text-slate-500">Velg en sak og kjør analyse.</p>
             <div className="mt-6 space-y-3">
               {cases.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-slate-300 p-4 text-sm text-slate-500">
@@ -296,7 +303,7 @@ export default function App() {
                         setSelectedCase(item);
                         setAnalysis(null);
                       }}
-                      className={`w-full rounded-xl border p-4 text-left ${
+                      className={`w-full rounded-xl border p-4 text-left transition-colors ${
                         active
                           ? "border-slate-900 bg-slate-900 text-white"
                           : "border-slate-200 bg-white hover:bg-slate-50"
@@ -304,13 +311,9 @@ export default function App() {
                     >
                       <div className="flex items-center justify-between">
                         <div className="font-medium">{item.title}</div>
-                        <div className="text-xs">#{item.id}</div>
+                        <div className="text-xs opacity-60">#{item.id}</div>
                       </div>
-                      <div
-                        className={`mt-2 text-sm ${
-                          active ? "text-slate-300" : "text-slate-500"
-                        }`}
-                      >
+                      <div className={`mt-1 text-sm ${active ? "text-slate-300" : "text-slate-500"}`}>
                         {item.company?.name ?? "Ukjent selskap"} · {item.negotiationYear} ·{" "}
                         {item.company?.organizationFormCode ?? "-"}
                       </div>
@@ -323,86 +326,39 @@ export default function App() {
         </div>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          {/* Valgt sak */}
           <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-xl font-semibold">Valgt sak</h2>
-
             {selectedCase ? (
-              <div className="mt-4 space-y-4">
-                <div className="rounded-xl bg-slate-50 p-4">
-                  <div className="text-sm text-slate-500">Tittel</div>
-                  <div className="mt-1 font-medium">{selectedCase.title}</div>
-                </div>
-
-                <div className="rounded-xl bg-slate-50 p-4">
-                  <div className="text-sm text-slate-500">Selskapsnavn</div>
-                  <div className="mt-1 font-medium">
-                    {selectedCase.company?.name ?? "Ukjent"}
-                  </div>
-                </div>
-
+              <div className="mt-4 space-y-3">
+                <InfoRow label="Tittel" value={selectedCase.title} />
+                <InfoRow label="Selskapsnavn" value={selectedCase.company?.name ?? "Ukjent"} />
                 <div className="grid gap-3 md:grid-cols-2">
-                  <div className="rounded-xl bg-slate-50 p-4">
-                    <div className="text-sm text-slate-500">Organisasjonsnummer</div>
-                    <div className="mt-1 font-medium">
-                      {selectedCase.company?.orgNumber ?? "-"}
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl bg-slate-50 p-4">
-                    <div className="text-sm text-slate-500">Organisasjonsform</div>
-                    <div className="mt-1 font-medium">
-                      {selectedCase.company?.organizationFormDescription ?? "-"}
-                    </div>
-                    <div className="text-xs text-slate-500">
-                      {selectedCase.company?.organizationFormCode ?? ""}
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl bg-slate-50 p-4">
-                    <div className="text-sm text-slate-500">Bransje</div>
-                    <div className="mt-1 font-medium">
-                      {selectedCase.company?.industryDescription ?? "-"}
-                    </div>
-                    <div className="text-xs text-slate-500">
-                      {selectedCase.company?.industryCode ?? ""}
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl bg-slate-50 p-4">
-                    <div className="text-sm text-slate-500">Antall ansatte</div>
-                    <div className="mt-1 font-medium">
-                      {selectedCase.company?.employees ?? 0}
-                    </div>
-                  </div>
+                  <InfoRow label="Org.nr." value={selectedCase.company?.orgNumber ?? "-"} />
+                  <InfoRow
+                    label="Organisasjonsform"
+                    value={selectedCase.company?.organizationFormDescription ?? "-"}
+                    sub={selectedCase.company?.organizationFormCode}
+                  />
+                  <InfoRow
+                    label="Bransje"
+                    value={selectedCase.company?.industryDescription ?? "-"}
+                    sub={selectedCase.company?.industryCode}
+                  />
+                  <InfoRow
+                    label="Ansatte"
+                    value={String(selectedCase.company?.employees ?? 0)}
+                  />
                 </div>
-
-                <div className="rounded-xl bg-slate-50 p-4">
-                  <div className="text-sm text-slate-500">Adresse</div>
-                  <div className="mt-1 font-medium">
-                    {selectedCase.company?.businessAddress ?? "-"}
-                  </div>
-                </div>
-
+                <InfoRow label="Adresse" value={selectedCase.company?.businessAddress ?? "-"} />
                 <div className="grid gap-3 md:grid-cols-2">
-                  <div className="rounded-xl bg-slate-50 p-4">
-                    <div className="text-sm text-slate-500">Konkurs</div>
-                    <div className="mt-1 font-medium">
-                      {selectedCase.company?.bankrupt ? "Ja" : "Nei"}
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl bg-slate-50 p-4">
-                    <div className="text-sm text-slate-500">Under avvikling</div>
-                    <div className="mt-1 font-medium">
-                      {selectedCase.company?.underLiquidation ? "Ja" : "Nei"}
-                    </div>
-                  </div>
+                  <InfoRow label="Konkurs" value={selectedCase.company?.bankrupt ? "Ja" : "Nei"} />
+                  <InfoRow label="Under avvikling" value={selectedCase.company?.underLiquidation ? "Ja" : "Nei"} />
                 </div>
-
                 <button
                   onClick={() => runAnalysis(selectedCase.id)}
                   disabled={analyzing}
-                  className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
+                  className="mt-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50"
                 >
                   {analyzing ? "Analyserer..." : "Kjør analyse"}
                 </button>
@@ -414,8 +370,24 @@ export default function App() {
             )}
           </section>
 
+          {/* Analyse */}
           <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold">Analyse</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Analyse</h2>
+              {analysis && (
+                <div className="flex items-center gap-2">
+                  {analysis.hasRegnskapData ? (
+                    <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                      Regnskap {analysis.regnskapYear}
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700">
+                      Kun registreringsdata
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
 
             {analysis ? (
               <div className="mt-4 space-y-4">
@@ -424,31 +396,28 @@ export default function App() {
                   <div className="mt-1 text-xl font-semibold">
                     {recommendationLabel(analysis.recommendation)}
                   </div>
-                  <div className="mt-2 text-sm text-slate-300">
-                    Gjennomsnittlig score: {averageScore / 10}/10
+                  <div className="mt-1 text-sm text-slate-300">
+                    Gjennomsnittlig score: {averageScore}/10
                   </div>
                 </div>
 
-                <div className="grid gap-3 md:grid-cols-2">
-                  {[
-                    ["Økonomi", analysis.economyScore],
-                    ["Produktivitet", analysis.productivityScore],
-                    ["Fremtidsutsikter", analysis.outlookScore],
-                    ["Konkurranseevne", analysis.competitivenessScore],
-                  ].map(([label, value]) => (
-                    <div
-                      key={String(label)}
-                      className="rounded-xl border border-slate-200 p-4"
-                    >
+                <div className="space-y-3">
+                  {criteriaRows.map(({ label, score, rationale }) => (
+                    <div key={label} className="rounded-xl border border-slate-200 p-4">
                       <div className="flex items-center justify-between">
                         <div className="font-medium">{label}</div>
-                        <div className="text-sm text-slate-500">
-                          {scoreLabel(Number(value))}
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-xs font-semibold ${scoreBadgeClass(score)}`}
+                          >
+                            {scoreLabel(score)}
+                          </span>
+                          <span className="text-lg font-bold">{score}/10</span>
                         </div>
                       </div>
-                      <div className="mt-2 text-2xl font-semibold">
-                        {String(value)}/10
-                      </div>
+                      {rationale && (
+                        <p className="mt-2 text-sm leading-5 text-slate-500">{rationale}</p>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -461,19 +430,41 @@ export default function App() {
           </section>
         </div>
 
+        {/* Utkast */}
         <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold">Utkast til begrunnelse</h2>
-          <p className="mt-2 text-sm text-slate-500">
-            Dette kan senere bygges ut med AI, men bør alltid være sporbar og forklarbar.
-          </p>
-
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Utkast til lønnskrav</h2>
+              <p className="mt-1 text-sm text-slate-500">
+                Generert fra regnskaps- og selskapsdata. Rediger fritt før bruk.
+              </p>
+            </div>
+          </div>
           <textarea
-            className="mt-4 min-h-[220px] w-full rounded-xl border border-slate-300 p-3"
+            className="mt-4 min-h-[280px] w-full rounded-xl border border-slate-300 p-3 font-mono text-sm leading-6 focus:outline-none focus:ring-2 focus:ring-slate-400"
             value={draftText}
             onChange={(e) => setDraftText(e.target.value)}
           />
         </section>
       </main>
+    </div>
+  );
+}
+
+function InfoRow({
+  label,
+  value,
+  sub,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+}) {
+  return (
+    <div className="rounded-xl bg-slate-50 p-3">
+      <div className="text-xs text-slate-500">{label}</div>
+      <div className="mt-0.5 font-medium">{value}</div>
+      {sub && <div className="text-xs text-slate-400">{sub}</div>}
     </div>
   );
 }

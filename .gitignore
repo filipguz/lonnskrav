@@ -1,0 +1,21 @@
+# Maven build output
+target/
+
+# H2 database files
+data/*.db
+data/*.trace.db
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Frontend build output
+frontend/dist/
+frontend/node_modules/
+
+# OS
+.DS_Store
+
+# Spring Boot local config override
+application-local.properties

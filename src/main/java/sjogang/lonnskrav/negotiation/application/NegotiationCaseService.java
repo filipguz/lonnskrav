@@ -9,10 +9,13 @@ import sjogang.lonnskrav.datasource.application.CompanyDataService;
 import sjogang.lonnskrav.negotiation.domain.NegotiationCase;
 import sjogang.lonnskrav.negotiation.dto.CreateCaseRequest;
 import sjogang.lonnskrav.negotiation.infrastructure.NegotiationCaseRepository;
+import sjogang.lonnskrav.regnskap.application.RegnskapDataProvider;
+import sjogang.lonnskrav.regnskap.domain.RegnskapSnapshot;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class NegotiationCaseService {
     private final CompanyRepository companyRepository;
     private final AnalysisService analysisService;
     private final CompanyDataService companyDataService;
+    private final RegnskapDataProvider regnskapDataProvider;
 
     public NegotiationCase createCase(CreateCaseRequest request) {
         Company company = companyRepository.findByOrgNumber(request.orgNumber())
@@ -58,13 +62,18 @@ public class NegotiationCaseService {
 
     public AnalysisResult analyzeCase(Long id) {
         NegotiationCase nc = caseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Case not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sak ikke funnet med id: " + id));
 
-        return analysisService.analyze(nc);
+        Optional<RegnskapSnapshot> regnskap = Optional.empty();
+        if (nc.getCompany() != null) {
+            regnskap = regnskapDataProvider.fetchLatest(nc.getCompany().getOrgNumber());
+        }
+
+        return analysisService.analyze(nc, regnskap);
     }
 
     public NegotiationCase getCaseById(Long id) {
         return caseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Case not found with id: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sak ikke funnet med id: " + id));
     }
 }

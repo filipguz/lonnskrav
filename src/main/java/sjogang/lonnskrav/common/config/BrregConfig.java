@@ -13,4 +13,11 @@ public class BrregConfig {
                 .baseUrl("https://data.brreg.no/enhetsregisteret/api")
                 .build();
     }
+
+    @Bean
+    public RestClient regnskapRestClient() {
+        return RestClient.builder()
+                .baseUrl("https://data.brreg.no/regnskapsregisteret")
+                .build();
+    }
 }
