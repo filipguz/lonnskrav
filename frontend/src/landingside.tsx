@@ -4,9 +4,9 @@ export default function LandingPage() {
       <header className="border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
           <div className="flex items-center gap-3">
-            <img src="/favicon.svg" alt="Lønnskrav AI" className="h-9 w-9 shrink-0" />
+            <img src="/favicon.svg" alt="Lønnskrav" className="h-9 w-9 shrink-0" />
             <div>
-              <div className="text-lg font-semibold tracking-tight">Lønnskrav AI</div>
+              <div className="text-lg font-semibold tracking-tight">Lønnskrav</div>
               <div className="text-sm text-slate-500">Beslutningsstøtte for lokale lønnsforhandlinger</div>
             </div>
           </div>
@@ -28,7 +28,7 @@ export default function LandingPage() {
               Bygg bedre lønnskrav med dokumenterte data og tydelige begrunnelser.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              Lønnskrav AI henter selskapsdata, vurderer dem opp mot kriteriene i lokale forhandlinger og lager et redigerbart forslag til lønnskrav med sporbare kilder.
+              Lønnskrav henter selskapsdata, vurderer dem opp mot kriteriene i lokale forhandlinger og lager et redigerbart forslag til lønnskrav med sporbare kilder.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -187,7 +187,7 @@ export default function LandingPage() {
           <div className="mx-auto max-w-7xl px-6 py-20 text-white lg:px-8">
             <div className="max-w-3xl">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Vil du teste en tidlig versjon av Lønnskrav AI?
+                Vil du teste en tidlig versjon av Lønnskrav?
               </h2>
               <p className="mt-4 text-lg text-slate-300">
                 Vi bygger en løsning for tillitsvalgte som trenger raskere innsikt, bedre dokumentasjon og tydeligere begrunnelser i lokale forhandlinger.

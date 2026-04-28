@@ -11,9 +11,9 @@
 	</parent>
 
 	<groupId>no.dittfirma</groupId>
-	<artifactId>lonnskrav-ai</artifactId>
+	<artifactId>lonnskrav</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>lonnskrav-ai</name>
+	<name>lonnskrav</name>
 	<description>App for lønnskrav og lokale forhandlinger</description>
 
     <properties>

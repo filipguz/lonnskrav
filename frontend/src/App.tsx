@@ -209,9 +209,9 @@ export default function App() {
         <div className="mx-auto max-w-7xl px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <img src="/favicon.svg" alt="Lønnskrav AI" className="h-10 w-10 shrink-0" />
+              <img src="/favicon.svg" alt="Lønnskrav" className="h-10 w-10 shrink-0" />
               <div>
-                <h1 className="text-2xl font-bold">Lønnskrav AI</h1>
+                <h1 className="text-2xl font-bold">Lønnskrav</h1>
                 <p className="text-sm text-slate-500">
                   Beslutningsstøtte for tillitsvalgte – selskapsdata og regnskap til
                   dokumenterte lønnskrav.

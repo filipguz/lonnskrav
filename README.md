@@ -1,4 +1,4 @@
-# Lønnskrav AI
+# Lønnskrav
 
 Beslutningsstøtte for tillitsvalgte under lokale lønnsforhandlinger. Appen henter selskapsdata og regnskapstall fra offentlige registre, analyserer dem mot tariffens fire kriterier og genererer et redigerbart utkast til lønnskrav.
 
@@ -55,8 +55,8 @@ Starter på `http://localhost:5173`.
 ### Docker (full stack)
 
 ```bash
-docker build -t lonnskrav-ai .
-docker run -p 8080:8080 lonnskrav-ai
+docker build -t lonnskrav .
+docker run -p 8080:8080 lonnskrav
 ```
 
 ---
