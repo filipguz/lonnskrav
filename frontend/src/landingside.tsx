@@ -3,9 +3,12 @@ export default function LandingPage() {
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
-          <div>
-            <div className="text-lg font-semibold tracking-tight">Lønnskrav AI</div>
-            <div className="text-sm text-slate-500">Beslutningsstøtte for lokale lønnsforhandlinger</div>
+          <div className="flex items-center gap-3">
+            <img src="/favicon.svg" alt="Lønnskrav AI" className="h-9 w-9 shrink-0" />
+            <div>
+              <div className="text-lg font-semibold tracking-tight">Lønnskrav AI</div>
+              <div className="text-sm text-slate-500">Beslutningsstøtte for lokale lønnsforhandlinger</div>
+            </div>
           </div>
           <nav className="hidden gap-6 text-sm text-slate-600 md:flex">
             <a href="#hvordan" className="transition hover:text-slate-900">Hvordan det virker</a>
