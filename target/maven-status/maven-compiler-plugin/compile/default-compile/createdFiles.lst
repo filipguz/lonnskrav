@@ -2,12 +2,12 @@ sjogang/lonnskrav/negotiation/domain/NegotiationCase.class
 sjogang/lonnskrav/negotiation/application/NegotiationCaseService.class
 sjogang/lonnskrav/company/infrastructure/CompanyRepository.class
 sjogang/lonnskrav/common/SecurityConfig.class
-sjogang/lonnskrav/negotiation/infrastructure/NegotiationCaseRepository.class
 sjogang/lonnskrav/common/config/CorsConfig.class
-sjogang/lonnskrav/company/domain/Company.class
-sjogang/lonnskrav/LonnskravApplication.class
 sjogang/lonnskrav/analysis/application/AnalysisService.class
 sjogang/lonnskrav/negotiation/api/NegotiationCaseController.class
-sjogang/lonnskrav/common/config/CorsConfig$1.class
 sjogang/lonnskrav/negotiation/dto/CreateCaseRequest.class
+sjogang/lonnskrav/negotiation/infrastructure/NegotiationCaseRepository.class
+sjogang/lonnskrav/company/domain/Company.class
+sjogang/lonnskrav/LonnskravApplication.class
+sjogang/lonnskrav/common/config/CorsConfig$1.class
 sjogang/lonnskrav/analysis/domain/AnalysisResult.class
