@@ -3,6 +3,7 @@ package sjogang.lonnskrav.negotiation.application;
 import lombok.RequiredArgsConstructor;
 import sjogang.lonnskrav.analysis.application.AnalysisService;
 import sjogang.lonnskrav.analysis.domain.AnalysisResult;
+import sjogang.lonnskrav.common.UserContextService;
 import sjogang.lonnskrav.company.domain.Company;
 import sjogang.lonnskrav.company.infrastructure.CompanyRepository;
 import sjogang.lonnskrav.datasource.application.CompanyDataService;
@@ -26,8 +27,11 @@ public class NegotiationCaseService {
     private final AnalysisService analysisService;
     private final CompanyDataService companyDataService;
     private final RegnskapDataProvider regnskapDataProvider;
+    private final UserContextService userContextService;
 
     public NegotiationCase createCase(CreateCaseRequest request) {
+        String userId = userContextService.getCurrentUserId();
+
         Company company = companyRepository.findByOrgNumber(request.orgNumber())
                 .orElseGet(() -> {
                     var snapshot = companyDataService.getCompanySnapshot(request.orgNumber());
@@ -48,6 +52,7 @@ public class NegotiationCaseService {
                 });
 
         NegotiationCase negotiationCase = new NegotiationCase();
+        negotiationCase.setUserId(userId);
         negotiationCase.setTitle(request.title());
         negotiationCase.setNegotiationYear(request.negotiationYear());
         negotiationCase.setStatus("CREATED");
@@ -57,12 +62,16 @@ public class NegotiationCaseService {
     }
 
     public List<NegotiationCase> getAllCases() {
-        return caseRepository.findAll();
+        return caseRepository.findByUserId(userContextService.getCurrentUserId());
+    }
+
+    public NegotiationCase getCaseById(Long id) {
+        return caseRepository.findByIdAndUserId(id, userContextService.getCurrentUserId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sak ikke funnet med id: " + id));
     }
 
     public AnalysisResult analyzeCase(Long id) {
-        NegotiationCase nc = caseRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sak ikke funnet med id: " + id));
+        NegotiationCase nc = getCaseById(id);
 
         Optional<RegnskapSnapshot> regnskap = Optional.empty();
         if (nc.getCompany() != null) {
@@ -70,10 +79,5 @@ public class NegotiationCaseService {
         }
 
         return analysisService.analyze(nc, regnskap);
-    }
-
-    public NegotiationCase getCaseById(Long id) {
-        return caseRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sak ikke funnet med id: " + id));
     }
 }

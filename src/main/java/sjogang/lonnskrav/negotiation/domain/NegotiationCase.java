@@ -23,6 +23,9 @@ public class NegotiationCase {
     @Column(nullable = false)
     private String status;
 
+    @Column(nullable = false)
+    private String userId;
+
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;

@@ -19,3 +19,7 @@ frontend/node_modules/
 
 # Spring Boot local config override
 application-local.properties
+
+# Lokale env-variabler (inneholder API-nøkler)
+frontend/.env.local
+frontend/.env
