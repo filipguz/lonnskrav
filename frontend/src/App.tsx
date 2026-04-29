@@ -10,6 +10,7 @@ import {
   BuildingOffice2Icon,
   ChartBarIcon,
   CheckCircleIcon,
+  PrinterIcon,
 } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -262,15 +263,15 @@ export default function App({
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b border-slate-200">
+      <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b border-slate-200 print:hidden">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
+          <a href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
             <img src="/favicon.svg" alt="Lønnskrav" className="h-8 w-8 shrink-0" />
             <div className="leading-tight">
               <div className="text-base font-bold">Lønnskrav</div>
               <div className="text-xs text-slate-500 hidden sm:block">Lønnsforhandlinger</div>
             </div>
-          </div>
+          </a>
           <div className="flex items-center gap-2">
             <Button variant="secondary" onClick={loadCases} loading={loadingCases} className="hidden sm:inline-flex h-9 px-3.5 text-xs">
               <ArrowPathIcon className="w-3.5 h-3.5" />
@@ -283,8 +284,18 @@ export default function App({
 
       <main className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-8 space-y-6 pb-28 sm:pb-8">
 
+        {/* Print-hode – kun synlig ved utskrift */}
+        <div className="hidden print:block mb-2">
+          <h1 className="text-xl font-bold">{selectedCase?.title ?? "Lønnskrav"}</h1>
+          <p className="text-sm text-slate-600">
+            {selectedCase?.company?.name}
+            {selectedCase?.company?.orgNumber && ` · Org.nr. ${selectedCase.company.orgNumber}`}
+            {" · "}{new Date().toLocaleDateString("nb-NO")}
+          </p>
+        </div>
+
         {/* Top grid: Opprett + Saker */}
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-5 lg:grid-cols-2 print:hidden">
 
           {/* Opprett ny sak — hidden on mobile (shown via modal/sheet) */}
           <Card className="hidden sm:block">
@@ -352,7 +363,7 @@ export default function App({
         </div>
 
         {/* Bottom grid: Valgt sak + Analyse */}
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-5 lg:grid-cols-2 print:block print:space-y-4">
 
           {/* Valgt sak */}
           <Card>
@@ -373,7 +384,7 @@ export default function App({
                     {selectedCase.company?.bankrupt && <Badge color="slate">Konkurs</Badge>}
                     {selectedCase.company?.underLiquidation && <Badge color="amber">Under avvikling</Badge>}
                   </div>
-                  <div className="pt-1 border-t border-slate-100">
+                  <div className="pt-1 border-t border-slate-100 print:hidden">
                     <Button
                       variant="primary"
                       onClick={() => runAnalysis(selectedCase.id)}
@@ -457,7 +468,15 @@ export default function App({
           <CardHeader
             title="Utkast til lønnskrav"
             subtitle="Generert fra regnskaps- og selskapsdata. Rediger fritt før bruk."
-            action={<DocumentTextIcon className="w-5 h-5 text-slate-400" />}
+            action={
+              <button
+                onClick={() => window.print()}
+                className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors print:hidden"
+              >
+                <PrinterIcon className="w-4 h-4" />
+                Skriv ut / PDF
+              </button>
+            }
           />
           <CardBody className="pt-4">
             <TextArea
@@ -471,7 +490,7 @@ export default function App({
 
       {/* Mobile: Opprett sak sheet */}
       {showMobileCreate && (
-        <div className="fixed inset-0 z-40 sm:hidden">
+        <div className="fixed inset-0 z-40 sm:hidden print:hidden">
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setShowMobileCreate(false)}
@@ -494,7 +513,7 @@ export default function App({
       )}
 
       {/* Mobile sticky CTA */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200 px-4 pt-3 pb-4 flex gap-3">
+      <div className="sm:hidden print:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200 px-4 pt-3 pb-4 flex gap-3">
         <Button variant="primary" fullWidth onClick={() => setShowMobileCreate(true)}>
           <PlusIcon className="w-4 h-4" />
           Opprett ny sak
@@ -505,7 +524,7 @@ export default function App({
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white mt-0 hidden sm:block">
+      <footer className="border-t border-slate-200 bg-white mt-0 hidden sm:block print:hidden">
         <div className="mx-auto max-w-6xl px-6 py-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-xs text-slate-400">
             Utviklet av{" "}

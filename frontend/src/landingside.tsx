@@ -42,6 +42,27 @@ const FEATURES = [
   "Fungerer på alle enheter, inkludert mobil",
 ];
 
+const ARTICLES = [
+  {
+    href: "/blog/lokale-lonnsforhandlinger.html",
+    readTime: 5,
+    title: "Slik forbereder du lokale lønnsforhandlinger",
+    excerpt: "En praktisk guide for tillitsvalgte: hva du bør forberede, hvilke data som teller og hvordan du bygger et troverdig krav.",
+  },
+  {
+    href: "/blog/regnskap-og-lonnskrav.html",
+    readTime: 6,
+    title: "Hva betyr regnskapstallene for lønnskravet ditt?",
+    excerpt: "Driftsmargin, egenkapital, omsetning per ansatt — lær hvilke tall som faktisk betyr noe og hvordan du leser dem som tillitsvalgt.",
+  },
+  {
+    href: "/blog/frontfagsmodellen.html",
+    readTime: 5,
+    title: "Frontfagsmodellen forklart — og hva den betyr lokalt",
+    excerpt: "Rammen er ikke et tak for din virksomhet. Forstår du frontfagsmodellen, forstår du også hvilken frihet du har i lokale forhandlinger.",
+  },
+];
+
 const TRUST_POINTS = [
   "Alle vurderinger er basert på offentlig tilgjengelige data.",
   "Scoringen kan etterprøves — du ser alltid hva den bygger på.",
@@ -90,6 +111,7 @@ export default function LandingPage() {
             <a href="#hvordan" className="hover:text-slate-900 transition-colors">Hvordan</a>
             <a href="#funksjoner" className="hover:text-slate-900 transition-colors">Funksjoner</a>
             <a href="#trygghet" className="hover:text-slate-900 transition-colors">Trygghet</a>
+            <a href="#innsikt" className="hover:text-slate-900 transition-colors">Innsikt</a>
           </nav>
           <SignInCta
             label="Logg inn"
@@ -265,6 +287,30 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Innsikt / Blogg ── */}
+        <section id="innsikt" className="bg-white border-t border-slate-200">
+          <div className="mx-auto max-w-6xl px-5 sm:px-8 py-16 sm:py-20">
+            <div className="max-w-xl mb-10">
+              <p className="text-xs font-semibold uppercase tracking-widest text-emerald-600 mb-3">Innsikt</p>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-950">Les mer om lønnsforhandlinger</h2>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {ARTICLES.map(({ href, readTime, title, excerpt }) => (
+                <a
+                  key={href}
+                  href={href}
+                  className="group rounded-2xl border border-slate-200 bg-slate-50 p-6 flex flex-col gap-3 hover:border-slate-300 hover:shadow-sm transition-all"
+                >
+                  <span className="text-xs text-slate-400">{readTime} min lesetid</span>
+                  <h3 className="font-semibold text-slate-900 leading-snug group-hover:text-emerald-700 transition-colors">{title}</h3>
+                  <p className="text-sm text-slate-600 leading-6 flex-1">{excerpt}</p>
+                  <span className="text-xs font-medium text-emerald-600">Les artikkelen →</span>
+                </a>
+              ))}
             </div>
           </div>
         </section>

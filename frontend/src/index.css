@@ -1,1 +1,22 @@
 @import "tailwindcss";
+
+@media print {
+  @page {
+    margin: 1.5cm;
+  }
+
+  textarea {
+    border: none !important;
+    background: transparent !important;
+    resize: none !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: unset !important;
+    padding: 0 !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    color: inherit !important;
+    box-shadow: none !important;
+  }
+}
