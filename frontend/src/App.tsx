@@ -10,6 +10,8 @@ import {
   ChartBarIcon,
   CheckCircleIcon,
   PrinterIcon,
+  ClipboardDocumentIcon,
+  CheckIcon,
 } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -129,6 +131,14 @@ export default function App({
   const [error, setError] = useState<string | null>(null);
   const [draftText, setDraftText] = useState("Foreløpig utkast til lønnskrav kommer her etter analyse.");
   const [showMobileCreate, setShowMobileCreate] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  function copyDraft() {
+    navigator.clipboard.writeText(draftText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
 
   const averageScore = useMemo(() => {
     if (!analysis) return 0;
@@ -471,13 +481,24 @@ export default function App({
             title="Utkast til lønnskrav"
             subtitle="Generert fra regnskaps- og selskapsdata. Rediger fritt før bruk."
             action={
-              <button
-                onClick={() => window.print()}
-                className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors print:hidden"
-              >
-                <PrinterIcon className="w-4 h-4" />
-                Skriv ut / PDF
-              </button>
+              <div className="flex items-center gap-3 print:hidden">
+                <button
+                  onClick={copyDraft}
+                  className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors"
+                >
+                  {copied
+                    ? <><CheckIcon className="w-4 h-4 text-emerald-600" /><span className="text-emerald-600">Kopiert</span></>
+                    : <><ClipboardDocumentIcon className="w-4 h-4" />Kopier</>
+                  }
+                </button>
+                <button
+                  onClick={() => window.print()}
+                  className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors"
+                >
+                  <PrinterIcon className="w-4 h-4" />
+                  Skriv ut
+                </button>
+              </div>
             }
           />
           <CardBody className="pt-4">
