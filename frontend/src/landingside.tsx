@@ -47,6 +47,12 @@ const FEATURES = [
 
 const ARTICLES = [
   {
+    href: "/blog/om-produktet.html",
+    readTime: 6,
+    title: "Hvorfor jeg bygde Lønnskrav — og hva som kommer",
+    excerpt: "Filip Gustavsen, tidligere hovedtillitsvalgt, om ideen bak produktet, hva det gjør i dag og planen for AI-integrasjon og statistikk.",
+  },
+  {
     href: "/blog/lokale-lonnsforhandlinger.html",
     readTime: 5,
     title: "Slik forbereder du lokale lønnsforhandlinger",
