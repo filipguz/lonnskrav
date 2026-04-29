@@ -360,7 +360,7 @@ export default function App({
             <CardBody className="pt-4">
               {selectedCase ? (
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-2 gap-2.5">
                     <InfoTile label="Org.nr." value={selectedCase.company?.orgNumber ?? "-"} />
                     <InfoTile label="Selskapsform" value={selectedCase.company?.organizationFormCode ?? "-"} sub={selectedCase.company?.organizationFormDescription} />
                     <InfoTile label="Ansatte" value={String(selectedCase.company?.employees ?? 0)} />
@@ -473,26 +473,33 @@ export default function App({
       {showMobileCreate && (
         <div className="fixed inset-0 z-40 sm:hidden">
           <div
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setShowMobileCreate(false)}
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 space-y-5 shadow-2xl">
-            <div className="flex items-center justify-between">
+          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-slate-100 shrink-0">
               <h2 className="text-base font-semibold">Opprett ny sak</h2>
-              <button onClick={() => setShowMobileCreate(false)} className="text-slate-400 text-sm">Lukk</button>
+              <button
+                onClick={() => setShowMobileCreate(false)}
+                className="text-slate-400 text-sm hover:text-slate-700 transition-colors"
+              >
+                Lukk
+              </button>
             </div>
-            {createForm}
+            <div className="overflow-y-auto px-6 py-5 space-y-0 pb-8">
+              {createForm}
+            </div>
           </div>
         </div>
       )}
 
       {/* Mobile sticky CTA */}
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur border-t border-slate-200 px-4 py-3 flex gap-3">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur border-t border-slate-200 px-4 pt-3 pb-4 flex gap-3">
         <Button variant="primary" fullWidth onClick={() => setShowMobileCreate(true)}>
           <PlusIcon className="w-4 h-4" />
-          Opprett sak
+          Opprett ny sak
         </Button>
-        <Button variant="secondary" onClick={loadCases} loading={loadingCases} className="shrink-0 px-3.5">
+        <Button variant="secondary" onClick={loadCases} loading={loadingCases} className="shrink-0 w-11 px-0 justify-center">
           <ArrowPathIcon className="w-4 h-4" />
         </Button>
       </div>
