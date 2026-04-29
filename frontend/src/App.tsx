@@ -1,5 +1,27 @@
 import { useMemo, useState } from "react";
 import { Show, SignIn, UserButton, useAuth } from "@clerk/react";
+import {
+  BriefcaseIcon,
+  FolderOpenIcon,
+  PlusIcon,
+  ArrowPathIcon,
+  DocumentTextIcon,
+  BuildingOffice2Icon,
+  ChartBarIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/24/outline";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Button,
+  Input,
+  TextArea,
+  EmptyState,
+  ErrorBanner,
+  Badge,
+  Skeleton,
+} from "./components/ui";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080";
 
@@ -50,19 +72,19 @@ type CreateCaseForm = {
 const initialForm: CreateCaseForm = {
   title: "Lokale forhandlinger 2026",
   negotiationYear: "2026",
-  orgNumber: "918405119",
+  orgNumber: "",
 };
+
+function scoreColor(score: number): "emerald" | "amber" | "slate" {
+  if (score >= 8) return "emerald";
+  if (score >= 6) return "amber";
+  return "slate";
+}
 
 function scoreLabel(score: number) {
   if (score >= 8) return "Sterk";
   if (score >= 6) return "Moderat";
   return "Svak";
-}
-
-function scoreBadgeClass(score: number) {
-  if (score >= 8) return "bg-emerald-100 text-emerald-700";
-  if (score >= 6) return "bg-amber-100 text-amber-700";
-  return "bg-red-100 text-red-700";
 }
 
 function recommendationLabel(value: string) {
@@ -74,17 +96,17 @@ function recommendationLabel(value: string) {
   }
 }
 
-// Rendres av main.tsx når VITE_CLERK_PUBLISHABLE_KEY er satt
+
 export function AppWithAuth() {
   const { getToken } = useAuth();
   return (
     <>
       <Show when="signed-out">
-        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-8">
+        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-8 px-4">
           <div className="flex items-center gap-3">
             <img src="/favicon.svg" alt="" className="h-10 w-10" />
             <div>
-              <div className="text-2xl font-bold">Lønnskrav</div>
+              <div className="text-2xl font-bold text-slate-900">Lønnskrav</div>
               <div className="text-sm text-slate-500">Beslutningsstøtte for lokale lønnsforhandlinger</div>
             </div>
           </div>
@@ -98,7 +120,6 @@ export function AppWithAuth() {
   );
 }
 
-// Hoved-app – brukes direkte (uten auth) når Clerk ikke er konfigurert
 export default function App({
   getToken = async () => null,
   authSlot = null,
@@ -114,15 +135,12 @@ export default function App({
   const [creatingCase, setCreatingCase] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [draftText, setDraftText] = useState(
-    "Foreløpig utkast til lønnskrav kommer her etter analyse."
-  );
+  const [draftText, setDraftText] = useState("Foreløpig utkast til lønnskrav kommer her etter analyse.");
+  const [showMobileCreate, setShowMobileCreate] = useState(false);
 
   const averageScore = useMemo(() => {
     if (!analysis) return 0;
-    const total =
-      analysis.economyScore + analysis.productivityScore +
-      analysis.outlookScore + analysis.competitivenessScore;
+    const total = analysis.economyScore + analysis.productivityScore + analysis.outlookScore + analysis.competitivenessScore;
     return (total / 4).toFixed(1);
   }, [analysis]);
 
@@ -178,6 +196,7 @@ export default function App({
       setSelectedCase(created);
       setAnalysis(null);
       setDraftText(`Sak opprettet for ${created.company?.name ?? "selskapet"}. Kjør analyse for å generere utkast.`);
+      setShowMobileCreate(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Kunne ikke opprette sak.");
     } finally {
@@ -200,187 +219,300 @@ export default function App({
   }
 
   const criteriaRows = analysis ? [
-    { label: "Økonomi", score: analysis.economyScore, rationale: analysis.economyRationale },
-    { label: "Produktivitet", score: analysis.productivityScore, rationale: analysis.productivityRationale },
-    { label: "Fremtidsutsikter", score: analysis.outlookScore, rationale: analysis.outlookRationale },
-    { label: "Konkurranseevne", score: analysis.competitivenessScore, rationale: analysis.competitivenessRationale },
+    { label: "Økonomi", score: analysis.economyScore, rationale: analysis.economyRationale, icon: "💰" },
+    { label: "Produktivitet", score: analysis.productivityScore, rationale: analysis.productivityRationale, icon: "📈" },
+    { label: "Fremtidsutsikter", score: analysis.outlookScore, rationale: analysis.outlookRationale, icon: "🔭" },
+    { label: "Konkurranseevne", score: analysis.competitivenessScore, rationale: analysis.competitivenessRationale, icon: "⚡" },
   ] : [];
+
+  const createForm = (
+    <div className="space-y-4">
+      <Input
+        label="Tittel"
+        value={form.title}
+        onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
+        placeholder="Lokale forhandlinger 2026"
+      />
+      <Input
+        label="Forhandlingsår"
+        type="number"
+        value={form.negotiationYear}
+        onChange={(e) => setForm((p) => ({ ...p, negotiationYear: e.target.value }))}
+        placeholder="2026"
+      />
+      <Input
+        label="Organisasjonsnummer"
+        value={form.orgNumber}
+        onChange={(e) => setForm((p) => ({ ...p, orgNumber: e.target.value }))}
+        placeholder="9 siffer"
+        helper="Finner du i Brønnøysundregisteret eller på firmaets brev."
+        maxLength={9}
+      />
+      {error && <ErrorBanner message={error} />}
+      <div className="flex gap-3 pt-1">
+        <Button
+          variant="primary"
+          onClick={createCase}
+          loading={creatingCase}
+          className="flex-1 sm:flex-none"
+        >
+          <PlusIcon className="w-4 h-4" />
+          Opprett sak
+        </Button>
+        <Button variant="secondary" onClick={loadCases} loading={loadingCases}>
+          <ArrowPathIcon className="w-4 h-4" />
+          Hent saker
+        </Button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <img src="/favicon.svg" alt="Lønnskrav" className="h-10 w-10 shrink-0" />
-              <div>
-                <h1 className="text-2xl font-bold">Lønnskrav</h1>
-                <p className="text-sm text-slate-500">
-                  Beslutningsstøtte for tillitsvalgte – selskapsdata og regnskap til dokumenterte lønnskrav.
-                </p>
-              </div>
+      {/* Header */}
+      <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b border-slate-200">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <img src="/favicon.svg" alt="Lønnskrav" className="h-8 w-8 shrink-0" />
+            <div className="leading-tight">
+              <div className="text-base font-bold">Lønnskrav</div>
+              <div className="text-xs text-slate-500 hidden sm:block">Lønnsforhandlinger</div>
             </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={loadCases}
-                disabled={loadingCases}
-                className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium hover:bg-slate-100 disabled:opacity-50"
-              >
-                {loadingCases ? "Henter..." : "Hent saker"}
-              </button>
-              {authSlot}
-            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" onClick={loadCases} loading={loadingCases} className="hidden sm:inline-flex h-9 px-3.5 text-xs">
+              <ArrowPathIcon className="w-3.5 h-3.5" />
+              Hent saker
+            </Button>
+            {authSlot}
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold">Opprett ny forhandlingssak</h2>
-            <p className="mt-2 text-sm text-slate-500">Søk opp selskapet og hent regnskapsdata automatisk.</p>
-            <div className="mt-6 space-y-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium">Tittel</label>
-                <input className="w-full rounded-xl border border-slate-300 px-3 py-2" value={form.title}
-                  onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium">Forhandlingsår</label>
-                <input className="w-full rounded-xl border border-slate-300 px-3 py-2" value={form.negotiationYear}
-                  onChange={(e) => setForm((p) => ({ ...p, negotiationYear: e.target.value }))} />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium">Organisasjonsnummer</label>
-                <input className="w-full rounded-xl border border-slate-300 px-3 py-2" placeholder="9 siffer"
-                  value={form.orgNumber} onChange={(e) => setForm((p) => ({ ...p, orgNumber: e.target.value }))} />
-              </div>
-              <div className="flex gap-3">
-                <button onClick={createCase} disabled={creatingCase}
-                  className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50">
-                  {creatingCase ? "Oppretter..." : "Opprett sak"}
-                </button>
-                <button onClick={loadCases} disabled={loadingCases}
-                  className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium hover:bg-slate-100 disabled:opacity-50">
-                  Hent saker
-                </button>
-              </div>
-              {error && (
-                <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 whitespace-pre-wrap">{error}</div>
-              )}
-            </div>
-          </section>
+      <main className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-8 space-y-6 pb-28 sm:pb-8">
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold">Saker</h2>
-            <p className="mt-2 text-sm text-slate-500">Velg en sak og kjør analyse.</p>
-            <div className="mt-6 space-y-3">
-              {cases.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-slate-300 p-4 text-sm text-slate-500">Ingen saker ennå.</div>
-              ) : (
-                cases.map((item) => {
-                  const active = selectedCase?.id === item.id;
-                  return (
-                    <button key={item.id} onClick={() => { setSelectedCase(item); setAnalysis(null); }}
-                      className={`w-full rounded-xl border p-4 text-left transition-colors ${active ? "border-slate-900 bg-slate-900 text-white" : "border-slate-200 bg-white hover:bg-slate-50"}`}>
-                      <div className="flex items-center justify-between">
-                        <div className="font-medium">{item.title}</div>
-                        <div className="text-xs opacity-60">#{item.id}</div>
-                      </div>
-                      <div className={`mt-1 text-sm ${active ? "text-slate-300" : "text-slate-500"}`}>
-                        {item.company?.name ?? "Ukjent selskap"} · {item.negotiationYear} · {item.company?.organizationFormCode ?? "-"}
-                      </div>
-                    </button>
-                  );
-                })
-              )}
-            </div>
-          </section>
-        </div>
+        {/* Top grid: Opprett + Saker */}
+        <div className="grid gap-5 lg:grid-cols-2">
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold">Valgt sak</h2>
-            {selectedCase ? (
-              <div className="mt-4 space-y-3">
-                <InfoRow label="Tittel" value={selectedCase.title} />
-                <InfoRow label="Selskapsnavn" value={selectedCase.company?.name ?? "Ukjent"} />
-                <div className="grid gap-3 md:grid-cols-2">
-                  <InfoRow label="Org.nr." value={selectedCase.company?.orgNumber ?? "-"} />
-                  <InfoRow label="Organisasjonsform" value={selectedCase.company?.organizationFormDescription ?? "-"} sub={selectedCase.company?.organizationFormCode} />
-                  <InfoRow label="Bransje" value={selectedCase.company?.industryDescription ?? "-"} sub={selectedCase.company?.industryCode} />
-                  <InfoRow label="Ansatte" value={String(selectedCase.company?.employees ?? 0)} />
-                </div>
-                <InfoRow label="Adresse" value={selectedCase.company?.businessAddress ?? "-"} />
-                <div className="grid gap-3 md:grid-cols-2">
-                  <InfoRow label="Konkurs" value={selectedCase.company?.bankrupt ? "Ja" : "Nei"} />
-                  <InfoRow label="Under avvikling" value={selectedCase.company?.underLiquidation ? "Ja" : "Nei"} />
-                </div>
-                <button onClick={() => runAnalysis(selectedCase.id)} disabled={analyzing}
-                  className="mt-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-50">
-                  {analyzing ? "Analyserer..." : "Kjør analyse"}
-                </button>
-              </div>
-            ) : (
-              <div className="mt-4 rounded-xl border border-dashed border-slate-300 p-4 text-sm text-slate-500">Ingen sak valgt.</div>
-            )}
-          </section>
+          {/* Opprett ny sak — hidden on mobile (shown via modal/sheet) */}
+          <Card className="hidden sm:block">
+            <CardHeader
+              title="Opprett ny sak"
+              subtitle="Søk opp selskapet via org.nr. og hent data automatisk."
+            />
+            <CardBody>{createForm}</CardBody>
+          </Card>
 
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Analyse</h2>
-              {analysis && (
-                analysis.hasRegnskapData ? (
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">Regnskap {analysis.regnskapYear}</span>
-                ) : (
-                  <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700">Kun registreringsdata</span>
-                )
-              )}
-            </div>
-            {analysis ? (
-              <div className="mt-4 space-y-4">
-                <div className="rounded-xl bg-slate-900 p-4 text-white">
-                  <div className="text-sm text-slate-300">Anbefaling</div>
-                  <div className="mt-1 text-xl font-semibold">{recommendationLabel(analysis.recommendation)}</div>
-                  <div className="mt-1 text-sm text-slate-300">Gjennomsnittlig score: {averageScore}/10</div>
-                </div>
+          {/* Saker */}
+          <Card>
+            <CardHeader
+              title="Saker"
+              subtitle={cases.length > 0 ? `${cases.length} sak${cases.length !== 1 ? "er" : ""}` : undefined}
+              action={
+                <Button variant="ghost" onClick={loadCases} loading={loadingCases} className="h-8 px-2.5 text-xs">
+                  <ArrowPathIcon className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Oppdater</span>
+                </Button>
+              }
+            />
+            <CardBody className="pt-4">
+              {loadingCases ? (
                 <div className="space-y-3">
-                  {criteriaRows.map(({ label, score, rationale }) => (
-                    <div key={label} className="rounded-xl border border-slate-200 p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="font-medium">{label}</div>
-                        <div className="flex items-center gap-2">
-                          <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${scoreBadgeClass(score)}`}>{scoreLabel(score)}</span>
-                          <span className="text-lg font-bold">{score}/10</span>
-                        </div>
-                      </div>
-                      {rationale && <p className="mt-2 text-sm leading-5 text-slate-500">{rationale}</p>}
-                    </div>
-                  ))}
+                  {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-16" />)}
                 </div>
-              </div>
-            ) : (
-              <div className="mt-4 rounded-xl border border-dashed border-slate-300 p-4 text-sm text-slate-500">Ingen analyse kjørt ennå.</div>
-            )}
-          </section>
+              ) : cases.length === 0 ? (
+                <EmptyState
+                  icon={<FolderOpenIcon />}
+                  title="Ingen saker ennå"
+                  subtitle="Opprett en ny sak for å komme i gang."
+                />
+              ) : (
+                <div className="space-y-2">
+                  {cases.map((item) => {
+                    const active = selectedCase?.id === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => { setSelectedCase(item); setAnalysis(null); }}
+                        className={`w-full rounded-xl border p-4 text-left transition-all duration-150 group ${
+                          active
+                            ? "border-slate-900 bg-slate-900 text-white shadow-md"
+                            : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="font-medium text-sm truncate">{item.title}</div>
+                          <span className={`text-xs shrink-0 tabular-nums ${active ? "text-slate-400" : "text-slate-400"}`}>#{item.id}</span>
+                        </div>
+                        <div className={`mt-1.5 text-xs flex items-center gap-1.5 ${active ? "text-slate-400" : "text-slate-500"}`}>
+                          <BuildingOffice2Icon className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">{item.company?.name ?? "Ukjent selskap"}</span>
+                          <span className="opacity-40">·</span>
+                          <span className="shrink-0">{item.negotiationYear}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </CardBody>
+          </Card>
         </div>
 
-        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold">Utkast til lønnskrav</h2>
-          <p className="mt-1 text-sm text-slate-500">Generert fra regnskaps- og selskapsdata. Rediger fritt før bruk.</p>
-          <textarea
-            className="mt-4 min-h-[280px] w-full rounded-xl border border-slate-300 p-3 font-mono text-sm leading-6 focus:outline-none focus:ring-2 focus:ring-slate-400"
-            value={draftText} onChange={(e) => setDraftText(e.target.value)} />
-        </section>
+        {/* Bottom grid: Valgt sak + Analyse */}
+        <div className="grid gap-5 lg:grid-cols-2">
+
+          {/* Valgt sak */}
+          <Card>
+            <CardHeader title="Valgt sak" subtitle={selectedCase ? selectedCase.company?.name : undefined} />
+            <CardBody className="pt-4">
+              {selectedCase ? (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <InfoTile label="Org.nr." value={selectedCase.company?.orgNumber ?? "-"} />
+                    <InfoTile label="Selskapsform" value={selectedCase.company?.organizationFormCode ?? "-"} sub={selectedCase.company?.organizationFormDescription} />
+                    <InfoTile label="Ansatte" value={String(selectedCase.company?.employees ?? 0)} />
+                    <InfoTile label="Bransje" value={selectedCase.company?.industryCode ?? "-"} sub={selectedCase.company?.industryDescription} />
+                  </div>
+                  {selectedCase.company?.businessAddress && (
+                    <InfoTile label="Adresse" value={selectedCase.company.businessAddress} />
+                  )}
+                  <div className="flex gap-2">
+                    {selectedCase.company?.bankrupt && <Badge color="slate">Konkurs</Badge>}
+                    {selectedCase.company?.underLiquidation && <Badge color="amber">Under avvikling</Badge>}
+                  </div>
+                  <div className="pt-1 border-t border-slate-100">
+                    <Button
+                      variant="primary"
+                      onClick={() => runAnalysis(selectedCase.id)}
+                      loading={analyzing}
+                      fullWidth
+                    >
+                      <ChartBarIcon className="w-4 h-4" />
+                      {analyzing ? "Analyserer..." : "Kjør analyse"}
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <EmptyState
+                  icon={<BriefcaseIcon />}
+                  title="Ingen sak valgt"
+                  subtitle="Velg en sak fra listen for å se detaljer."
+                />
+              )}
+            </CardBody>
+          </Card>
+
+          {/* Analyse */}
+          <Card>
+            <CardHeader
+              title="Analyse"
+              action={
+                analysis && (
+                  analysis.hasRegnskapData
+                    ? <Badge color="emerald">Regnskap {analysis.regnskapYear}</Badge>
+                    : <Badge color="amber">Kun registreringsdata</Badge>
+                )
+              }
+            />
+            <CardBody className="pt-4">
+              {analysis ? (
+                <div className="space-y-4">
+                  {/* Recommendation banner */}
+                  <div className="rounded-xl bg-slate-900 text-white p-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <CheckCircleIcon className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="text-xs text-slate-400 font-medium uppercase tracking-wide">Anbefaling</span>
+                    </div>
+                    <div className="text-base font-semibold">{recommendationLabel(analysis.recommendation)}</div>
+                    <div className="mt-1 text-sm text-slate-400">Gjennomsnittlig score: <span className="text-white font-medium">{averageScore}/10</span></div>
+                  </div>
+
+                  {/* Score rows */}
+                  <div className="space-y-2.5">
+                    {criteriaRows.map(({ label, score, rationale, icon }) => (
+                      <div key={label} className="rounded-xl border border-slate-100 bg-slate-50 p-3.5">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 text-sm font-medium text-slate-800">
+                            <span>{icon}</span>
+                            {label}
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Badge color={scoreColor(score)}>{scoreLabel(score)}</Badge>
+                            <span className="text-base font-bold text-slate-900 tabular-nums w-8 text-right">{score}<span className="text-xs font-normal text-slate-400">/10</span></span>
+                          </div>
+                        </div>
+                        {rationale && (
+                          <p className="mt-2 text-xs leading-5 text-slate-500">{rationale}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <EmptyState
+                  icon={<ChartBarIcon />}
+                  title="Ingen analyse ennå"
+                  subtitle={selectedCase ? "Trykk «Kjør analyse» for å starte." : "Velg en sak først."}
+                />
+              )}
+            </CardBody>
+          </Card>
+        </div>
+
+        {/* Utkast */}
+        <Card>
+          <CardHeader
+            title="Utkast til lønnskrav"
+            subtitle="Generert fra regnskaps- og selskapsdata. Rediger fritt før bruk."
+            action={<DocumentTextIcon className="w-5 h-5 text-slate-400" />}
+          />
+          <CardBody className="pt-4">
+            <TextArea
+              value={draftText}
+              onChange={(e) => setDraftText(e.target.value)}
+              className="min-h-[240px]"
+            />
+          </CardBody>
+        </Card>
       </main>
 
-      <footer className="mt-12 border-t border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-5 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-sm text-slate-500">
+      {/* Mobile: Opprett sak sheet */}
+      {showMobileCreate && (
+        <div className="fixed inset-0 z-40 sm:hidden">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setShowMobileCreate(false)}
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-semibold">Opprett ny sak</h2>
+              <button onClick={() => setShowMobileCreate(false)} className="text-slate-400 text-sm">Lukk</button>
+            </div>
+            {createForm}
+          </div>
+        </div>
+      )}
+
+      {/* Mobile sticky CTA */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur border-t border-slate-200 px-4 py-3 flex gap-3">
+        <Button variant="primary" fullWidth onClick={() => setShowMobileCreate(true)}>
+          <PlusIcon className="w-4 h-4" />
+          Opprett sak
+        </Button>
+        <Button variant="secondary" onClick={loadCases} loading={loadingCases} className="shrink-0 px-3.5">
+          <ArrowPathIcon className="w-4 h-4" />
+        </Button>
+      </div>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-200 bg-white mt-0 hidden sm:block">
+        <div className="mx-auto max-w-6xl px-6 py-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-xs text-slate-400">
             Utviklet av{" "}
-            <a href="https://github.com/filipguz" className="font-medium text-slate-700 hover:text-slate-900" target="_blank" rel="noopener noreferrer">filipguz</a>
+            <a href="https://github.com/filipguz" className="font-medium text-slate-600 hover:text-slate-900" target="_blank" rel="noopener noreferrer">filipguz</a>
           </span>
-          <div className="flex gap-4 text-sm text-slate-500">
+          <div className="flex gap-4 text-xs text-slate-400">
             <a href="mailto:hei@filipgustavsen.no" className="hover:text-slate-900">hei@filipgustavsen.no</a>
             <a href="https://filipgustavsen.no" className="hover:text-slate-900" target="_blank" rel="noopener noreferrer">filipgustavsen.no</a>
           </div>
@@ -390,12 +522,12 @@ export default function App({
   );
 }
 
-function InfoRow({ label, value, sub }: { label: string; value: string; sub?: string }) {
+function InfoTile({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-xl bg-slate-50 p-3">
-      <div className="text-xs text-slate-500">{label}</div>
-      <div className="mt-0.5 font-medium">{value}</div>
-      {sub && <div className="text-xs text-slate-400">{sub}</div>}
+    <div className="rounded-xl bg-slate-50 border border-slate-100 px-3.5 py-3">
+      <div className="text-xs text-slate-500 mb-0.5">{label}</div>
+      <div className="text-sm font-medium text-slate-900 truncate">{value}</div>
+      {sub && <div className="text-xs text-slate-400 truncate">{sub}</div>}
     </div>
   );
 }
