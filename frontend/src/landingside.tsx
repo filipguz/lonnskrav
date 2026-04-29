@@ -109,10 +109,10 @@ export default function LandingPage() {
       {/* Nav */}
       <header className="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-slate-200">
         <div className="mx-auto max-w-6xl px-5 sm:px-8 h-14 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
+          <a href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
             <Logo />
             <span className="font-bold text-base tracking-tight">Lønnskrav</span>
-          </div>
+          </a>
           <nav className="hidden md:flex items-center gap-6 text-sm text-slate-600">
             <a href="#hvordan" className="hover:text-slate-900 transition-colors">Hvordan</a>
             <a href="#funksjoner" className="hover:text-slate-900 transition-colors">Funksjoner</a>

@@ -264,13 +264,16 @@ export default function App({
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white/90 backdrop-blur border-b border-slate-200 print:hidden">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-          <a href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+          <button
+            onClick={() => { setSelectedCase(null); setAnalysis(null); setDraftText("Foreløpig utkast til lønnskrav kommer her etter analyse."); }}
+            className="flex items-center gap-2.5 hover:opacity-80 transition-opacity"
+          >
             <img src="/favicon.svg" alt="Lønnskrav" className="h-8 w-8 shrink-0" />
             <div className="leading-tight">
               <div className="text-base font-bold">Lønnskrav</div>
               <div className="text-xs text-slate-500 hidden sm:block">Lønnsforhandlinger</div>
             </div>
-          </a>
+          </button>
           <div className="flex items-center gap-2">
             <Button variant="secondary" onClick={loadCases} loading={loadingCases} className="hidden sm:inline-flex h-9 px-3.5 text-xs">
               <ArrowPathIcon className="w-3.5 h-3.5" />
