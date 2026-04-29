@@ -6,7 +6,6 @@ import {
   FolderOpenIcon,
   PlusIcon,
   ArrowPathIcon,
-  DocumentTextIcon,
   BuildingOffice2Icon,
   ChartBarIcon,
   CheckCircleIcon,
