@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Show, SignIn, UserButton, useAuth } from "@clerk/react";
+import { Show, UserButton, useAuth } from "@clerk/react";
+import LandingPage from "./landingside";
 import {
   BriefcaseIcon,
   FolderOpenIcon,
@@ -102,16 +103,7 @@ export function AppWithAuth() {
   return (
     <>
       <Show when="signed-out">
-        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-8 px-4">
-          <div className="flex items-center gap-3">
-            <img src="/favicon.svg" alt="" className="h-10 w-10" />
-            <div>
-              <div className="text-2xl font-bold text-slate-900">Lønnskrav</div>
-              <div className="text-sm text-slate-500">Beslutningsstøtte for lokale lønnsforhandlinger</div>
-            </div>
-          </div>
-          <SignIn />
-        </div>
+        <LandingPage />
       </Show>
       <Show when="signed-in">
         <App getToken={getToken} authSlot={<UserButton />} />
