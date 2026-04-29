@@ -50,7 +50,7 @@ const ARTICLES = [
     href: "/blog/om-produktet.html",
     readTime: 6,
     title: "Hvorfor jeg bygde Lønnskrav — og hva som kommer",
-    excerpt: "Filip Gustavsen, tidligere hovedtillitsvalgt, om ideen bak produktet, hva det gjør i dag og planen for AI-integrasjon og statistikk.",
+    excerpt: "Filip Gustavsen, tidligere hovedtillitsvalgt i Parat i 7 år, om ideen bak produktet, hva det gjør i dag og planen for AI-integrasjon og statistikk.",
   },
   {
     href: "/blog/lokale-lonnsforhandlinger.html",
