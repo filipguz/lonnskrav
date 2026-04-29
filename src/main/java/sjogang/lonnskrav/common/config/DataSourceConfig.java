@@ -20,12 +20,14 @@ public class DataSourceConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
-        // Render gir postgres://user:pass@host:port/db — konverter til JDBC-format
+        // Render gir postgres://user:pass@host[:port]/db — konverter til JDBC-format
         URI uri = URI.create(databaseUrl.replace("postgres://", "postgresql://"));
-        String[] userInfo = uri.getUserInfo().split(":");
-        String jdbcUrl = "jdbc:postgresql://" + uri.getHost() + ":" + uri.getPort() + uri.getPath();
+        String[] userInfo = uri.getUserInfo().split(":", 2);
+        int port = uri.getPort() == -1 ? 5432 : uri.getPort();
+        String jdbcUrl = "jdbc:postgresql://" + uri.getHost() + ":" + port + uri.getPath();
 
         HikariDataSource ds = new HikariDataSource();
+        ds.setDriverClassName("org.postgresql.Driver");
         ds.setJdbcUrl(jdbcUrl);
         ds.setUsername(userInfo[0]);
         ds.setPassword(userInfo.length > 1 ? userInfo[1] : "");
