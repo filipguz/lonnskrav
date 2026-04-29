@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slik beregnes de fire kriteriene | Lønnskrav</title>
+  <meta name="description" content="En transparent gjennomgang av hvordan Lønnskrav beregner score for økonomi, produktivitet, fremtidsutsikter og konkurranseevne — med alle terskelverdier og kilder." />
+  <link rel="canonical" href="https://lonnskrav.no/blog/metodikk.html" />
+  <meta property="og:title" content="Slik beregnes de fire kriteriene" />
+  <meta property="og:description" content="Transparent gjennomgang av scoringsmodellen i Lønnskrav." />
+  <meta property="og:url" content="https://lonnskrav.no/blog/metodikk.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Lønnskrav" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Slik beregnes de fire kriteriene i Lønnskrav",
+    "description": "Transparent gjennomgang av scoringsmodellen — terskelverdier, datakilder og begrensninger.",
+    "author": { "@type": "Organization", "name": "Lønnskrav", "url": "https://lonnskrav.no" },
+    "publisher": { "@type": "Organization", "name": "Lønnskrav", "url": "https://lonnskrav.no" },
+    "mainEntityOfPage": "https://lonnskrav.no/blog/metodikk.html"
+  }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.75; }
+    a { color: #059669; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    nav { background: white; border-bottom: 1px solid #e2e8f0; padding: 0 1.5rem; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+    .nav-brand { font-weight: 700; font-size: 1rem; color: #0f172a; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-brand:hover { text-decoration: none; opacity: 0.8; }
+    .nav-logo { height: 28px; width: 28px; }
+    .back-link { font-size: 0.875rem; color: #64748b; }
+    .back-link:hover { color: #0f172a; text-decoration: none; }
+    article { max-width: 680px; margin: 3rem auto; padding: 0 1.5rem 5rem; }
+    .eyebrow { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #059669; margin-bottom: 1rem; }
+    h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 800; line-height: 1.15; color: #0f172a; margin-bottom: 1.25rem; }
+    .lead { font-size: 1.0625rem; color: #475569; line-height: 1.85; margin-bottom: 1.75rem; }
+    .meta { font-size: 0.8rem; color: #94a3b8; margin-bottom: 2.5rem; display: flex; gap: 1.25rem; flex-wrap: wrap; }
+    h2 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-top: 2.75rem; margin-bottom: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+    h3 { font-size: 1rem; font-weight: 600; color: #334155; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+    p { margin-bottom: 1.25rem; font-size: 1rem; color: #334155; }
+    ul, ol { margin: 0 0 1.25rem 1.5rem; }
+    li { margin-bottom: 0.5rem; color: #334155; font-size: 1rem; }
+    hr { border: none; border-top: 1px solid #e2e8f0; margin: 2.5rem 0; }
+    .score-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0 1.75rem; font-size: 0.9375rem; }
+    .score-table th { text-align: left; padding: 0.5rem 0.75rem; background: #f1f5f9; color: #475569; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0; }
+    .score-table td { padding: 0.625rem 0.75rem; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: top; }
+    .score-table tr:last-child td { border-bottom: none; }
+    .plus { color: #16a34a; font-weight: 600; }
+    .minus { color: #dc2626; font-weight: 600; }
+    .neutral { color: #64748b; }
+    .criterion-header { background: #0f172a; color: white; border-radius: 1rem 1rem 0 0; padding: 1rem 1.25rem 0.875rem; margin-top: 2rem; }
+    .criterion-header .label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.25rem; }
+    .criterion-header h2 { font-size: 1.0625rem; font-weight: 700; color: white; margin: 0; }
+    .criterion-body { background: white; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 1rem 1rem; padding: 1.25rem; margin-bottom: 1.5rem; }
+    .criterion-body p { margin-bottom: 0.75rem; }
+    .base-score { display: inline-block; background: #f1f5f9; border-radius: 0.5rem; padding: 0.25rem 0.75rem; font-size: 0.875rem; font-weight: 600; color: #475569; margin-bottom: 1rem; }
+    .info-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 1rem; padding: 1.25rem 1.5rem; margin: 1.75rem 0; }
+    .info-box p { color: #166534; margin-bottom: 0; font-size: 0.9375rem; }
+    .info-box strong { display: block; color: #14532d; margin-bottom: 0.375rem; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .warn-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 1rem; padding: 1.25rem 1.5rem; margin: 1.75rem 0; }
+    .warn-box p { color: #92400e; margin-bottom: 0; font-size: 0.9375rem; }
+    .warn-box strong { display: block; color: #78350f; margin-bottom: 0.375rem; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .cta-box { background: #0f172a; color: white; border-radius: 1.5rem; padding: 2rem 2rem 2.25rem; margin-top: 3rem; }
+    .cta-box h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.625rem; color: white; }
+    .cta-box p { color: #94a3b8; font-size: 0.9375rem; margin-bottom: 1.5rem; }
+    .cta-btn { display: inline-block; background: white; color: #0f172a; font-weight: 600; font-size: 0.875rem; padding: 0.75rem 1.5rem; border-radius: 0.75rem; }
+    .cta-btn:hover { background: #f1f5f9; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="nav-brand">
+      <img src="/favicon.svg" alt="Lønnskrav" class="nav-logo" />
+      Lønnskrav
+    </a>
+    <a href="/" class="back-link">← Tilbake til forsiden</a>
+  </nav>
+
+  <article>
+    <p class="eyebrow">Metodikk</p>
+    <h1>Slik beregnes de fire kriteriene</h1>
+    <p class="lead">Lønnskrav er bygget på etterprøvbar logikk. Her er en fullstendig gjennomgang av hvordan hvert kriterium scores, hvilke terskelverdier som brukes og hva som skjer når regnskapsdata ikke er tilgjengelig.</p>
+    <div class="meta">
+      <span>7 min lesetid</span>
+      <span>Metodikk</span>
+      <span>Transparens</span>
+    </div>
+
+    <h2>Datakilder</h2>
+    <p>Analysen henter data fra to offentlige registre:</p>
+    <ul>
+      <li><strong>Brønnøysundregisteret</strong> — navn, org.nr., bransje, antall ansatte, organisasjonsform og eventuelle konkurs- eller avviklingsstatus</li>
+      <li><strong>Regnskapsregisteret</strong> — siste tilgjengelige årsregnskap med driftsinntekter, driftsresultat, årsresultat og egenkapital</li>
+    </ul>
+    <p>Alle data er offentlig tilgjengelige for norske aksjeselskaper og tilsvarende. Enkeltpersonforetak og noen andre organisasjonsformer har ikke offentlig regnskap.</p>
+
+    <div class="info-box">
+      <strong>Utgangspunkt for alle scorer</strong>
+      <p>Hvert kriterium starter på <strong>5 av 10</strong>. Positive indikatorer legger til poeng, negative trekker fra. Sluttscoren klippes alltid til intervallet 1–10.</p>
+    </div>
+
+    <hr />
+
+    <!-- ØKONOMI -->
+    <div class="criterion-header">
+      <div class="label">Kriterium 1</div>
+      <h2>💰 Økonomi</h2>
+    </div>
+    <div class="criterion-body">
+      <p>Måler virksomhetens finansielle helse basert på egenkapitalprosent og driftsmargin.</p>
+      <span class="base-score">Utgangspunkt: 5 / 10</span>
+
+      <h3>Egenkapitalprosent (egenkapital ÷ sum eiendeler)</h3>
+      <table class="score-table">
+        <thead><tr><th>Verdi</th><th>Justering</th><th>Begrunnelse</th></tr></thead>
+        <tbody>
+          <tr><td>≥ 40 %</td><td class="plus">+3</td><td>Svært solid finansiell posisjon</td></tr>
+          <tr><td>≥ 25 %</td><td class="plus">+2</td><td>God egenkapitalbuffer</td></tr>
+          <tr><td>≥ 10 %</td><td class="plus">+1</td><td>Tilfredsstillende soliditet</td></tr>
+          <tr><td>0 – 10 %</td><td class="neutral">0</td><td>Nøytralt</td></tr>
+          <tr><td>&lt; 0 %</td><td class="minus">−2</td><td>Negativ egenkapital — høy finansiell risiko</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Driftsmargin (driftsresultat ÷ driftsinntekter)</h3>
+      <table class="score-table">
+        <thead><tr><th>Verdi</th><th>Justering</th><th>Begrunnelse</th></tr></thead>
+        <tbody>
+          <tr><td>≥ 15 %</td><td class="plus">+2</td><td>Høy lønnsomhet i kjernevirksomheten</td></tr>
+          <tr><td>≥ 8 %</td><td class="plus">+1</td><td>God driftsmargin</td></tr>
+          <tr><td>0 – 8 %</td><td class="neutral">0</td><td>Nøytralt</td></tr>
+          <tr><td>&lt; 0 %</td><td class="minus">−2</td><td>Driftsunderskudd</td></tr>
+        </tbody>
+      </table>
+      <p>Maksimal økonomi-score er <strong>10</strong> (5 + 3 + 2), minimal er <strong>1</strong> (5 − 2 − 2 = 1 etter klipping).</p>
+    </div>
+
+    <!-- PRODUKTIVITET -->
+    <div class="criterion-header">
+      <div class="label">Kriterium 2</div>
+      <h2>📈 Produktivitet</h2>
+    </div>
+    <div class="criterion-body">
+      <p>Måler verdiskapingen per ansatt og hensyntar virksomhetens størrelse.</p>
+      <span class="base-score">Utgangspunkt: 5 / 10</span>
+
+      <h3>Omsetning per ansatt (sum driftsinntekter ÷ antall ansatte)</h3>
+      <table class="score-table">
+        <thead><tr><th>Verdi</th><th>Justering</th><th>Begrunnelse</th></tr></thead>
+        <tbody>
+          <tr><td>≥ 5 000 000 kr</td><td class="plus">+3</td><td>Svært høy produktivitet</td></tr>
+          <tr><td>≥ 2 000 000 kr</td><td class="plus">+2</td><td>Over norsk gjennomsnitt</td></tr>
+          <tr><td>≥ 1 000 000 kr</td><td class="plus">+1</td><td>Tilfredsstillende nivå</td></tr>
+          <tr><td>500 000 – 1 000 000 kr</td><td class="neutral">0</td><td>Nøytralt</td></tr>
+          <tr><td>&lt; 500 000 kr</td><td class="minus">−1</td><td>Lav omsetning per hode</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Størrelsesbasert justering (antall ansatte)</h3>
+      <table class="score-table">
+        <thead><tr><th>Antall</th><th>Justering</th></tr></thead>
+        <tbody>
+          <tr><td>≥ 200</td><td class="plus">+1</td></tr>
+          <tr><td>0</td><td class="minus">−1</td></tr>
+        </tbody>
+      </table>
+      <p>Dersom antall ansatte mangler fra Brreg, brukes kun inntektsbasert score.</p>
+    </div>
+
+    <!-- FREMTIDSUTSIKTER -->
+    <div class="criterion-header">
+      <div class="label">Kriterium 3</div>
+      <h2>🔭 Fremtidsutsikter</h2>
+    </div>
+    <div class="criterion-body">
+      <p>Vurderer finansiell bærekraft på sikt basert på årsresultat og egenkapitalandel.</p>
+      <span class="base-score">Utgangspunkt: 5 / 10</span>
+
+      <h3>Årsresultat</h3>
+      <table class="score-table">
+        <thead><tr><th>Verdi</th><th>Justering</th></tr></thead>
+        <tbody>
+          <tr><td>Positivt</td><td class="plus">+1</td></tr>
+          <tr><td>Negativt</td><td class="minus">−2</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Egenkapitalprosent (langsiktig stabilitet)</h3>
+      <table class="score-table">
+        <thead><tr><th>Verdi</th><th>Justering</th><th>Begrunnelse</th></tr></thead>
+        <tbody>
+          <tr><td>≥ 20 %</td><td class="plus">+2</td><td>God finansiell stabilitet</td></tr>
+          <tr><td>0 – 20 %</td><td class="plus">+1</td><td>Tilstrekkelig buffer</td></tr>
+          <tr><td>&lt; 0 %</td><td class="minus">−2</td><td>Negativ egenkapital er en risikofaktor</td></tr>
+        </tbody>
+      </table>
+      <p>Egenkapitalen brukes i to kriterier fordi den er relevant for både nåværende soliditet (økonomi) og fremtidig overlevelsesevne (fremtidsutsikter).</p>
+    </div>
+
+    <!-- KONKURRANSEEVNE -->
+    <div class="criterion-header">
+      <div class="label">Kriterium 4</div>
+      <h2>⚡ Konkurranseevne</h2>
+    </div>
+    <div class="criterion-body">
+      <p>Vurderer virksomhetens markedsposisjon og relative størrelse.</p>
+      <span class="base-score">Utgangspunkt: 5 / 10</span>
+
+      <h3>Omsetningsstørrelse</h3>
+      <table class="score-table">
+        <thead><tr><th>Verdi</th><th>Justering</th></tr></thead>
+        <tbody>
+          <tr><td>≥ 1 mrd kr</td><td class="plus">+3</td></tr>
+          <tr><td>≥ 100 MNOK</td><td class="plus">+2</td></tr>
+          <tr><td>≥ 50 MNOK</td><td class="plus">+1</td></tr>
+          <tr><td>10 – 50 MNOK</td><td class="neutral">0</td></tr>
+          <tr><td>&lt; 10 MNOK</td><td class="minus">−1</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Antall ansatte</h3>
+      <table class="score-table">
+        <thead><tr><th>Antall</th><th>Justering</th></tr></thead>
+        <tbody>
+          <tr><td>≥ 200</td><td class="plus">+2</td></tr>
+          <tr><td>≥ 50</td><td class="plus">+1</td></tr>
+          <tr><td>&lt; 50</td><td class="neutral">0</td></tr>
+          <tr><td>0</td><td class="minus">−1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr />
+
+    <h2>Samlet anbefaling</h2>
+    <p>Anbefalingen beregnes som gjennomsnittet av de fire scorene:</p>
+    <table class="score-table">
+      <thead><tr><th>Gjennomsnitt</th><th>Anbefaling</th></tr></thead>
+      <tbody>
+        <tr><td>≥ 7,5</td><td><strong>Sterkt grunnlag for høyere krav</strong></td></tr>
+        <tr><td>≥ 5,0</td><td><strong>Moderat grunnlag for lønnskrav</strong></td></tr>
+        <tr><td>&lt; 5,0</td><td><strong>Forsiktig tilnærming anbefales</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h2>Når regnskap ikke er tilgjengelig</h2>
+    <p>Dersom Regnskapsregisteret ikke har tall for virksomheten (typisk for enkeltpersonforetak, nyetablerte selskaper eller selskaper som ikke har levert), brukes kun data fra Brønnøysundregisteret:</p>
+    <ul>
+      <li><strong>Enkeltpersonforetak (ENK)</strong> — økonomi og fremtidsutsikter justeres ned med 1</li>
+      <li><strong>Antall ansatte</strong> — brukes til å justere produktivitet og konkurranseevne etter samme skala som over</li>
+      <li><strong>Bransje</strong> — undervisning, idrett og rekreasjon gir fremtidsutsikter +1; konsulent og teknologi gir konkurranseevne +1; transport, servering og detaljhandel gir økonomi −1</li>
+    </ul>
+    <p>Analysen merkes tydelig med "Kun registreringsdata" i dette tilfellet.</p>
+
+    <div class="warn-box">
+      <strong>Viktig begrensning</strong>
+      <p>Modellen er et beslutningsstøtteverktøy, ikke en fasit. Scorene er basert på offentlige tall og generelle terskelverdier — de tar ikke hensyn til bransjenormer, lokale lønnsforhold, tariffavtale-spesifikasjoner eller informasjon du har internt. Bruk analysen som et utgangspunkt, ikke som en endelig konklusjon.</p>
+    </div>
+
+    <hr />
+
+    <p>Les også: <a href="/blog/regnskap-og-lonnskrav.html">Hva betyr regnskapstallene for lønnskravet ditt?</a> — en praktisk forklaring av nøkkeltallene.</p>
+
+    <div class="cta-box">
+      <h3>Se analysen for din virksomhet</h3>
+      <p>Lønnskrav beregner alle fire kriterier automatisk basert på offentlige data — og gir deg et ferdig utkast til lønnskravbrev på under ett minutt.</p>
+      <a href="/" class="cta-btn">Prøv Lønnskrav gratis →</a>
+    </div>
+  </article>
+</body>
+</html>

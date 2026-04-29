@@ -61,6 +61,12 @@ const ARTICLES = [
     title: "Frontfagsmodellen forklart — og hva den betyr lokalt",
     excerpt: "Rammen er ikke et tak for din virksomhet. Forstår du frontfagsmodellen, forstår du også hvilken frihet du har i lokale forhandlinger.",
   },
+  {
+    href: "/blog/metodikk.html",
+    readTime: 7,
+    title: "Slik beregnes de fire kriteriene",
+    excerpt: "En transparent gjennomgang av scoringsmodellen — alle terskelverdier, datakilder og hva som skjer når regnskap ikke er tilgjengelig.",
+  },
 ];
 
 const TRUST_POINTS = [
