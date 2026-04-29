@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { SignInButton } from "@clerk/react";
 import {
   ChartBarIcon,
@@ -6,6 +7,8 @@ import {
   ShieldCheckIcon,
   ArrowTrendingUpIcon,
   CheckIcon,
+  Bars3Icon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 
 const MOCK_SCORES = [
@@ -102,28 +105,62 @@ function SignInCta({ label, className }: { label: string; className: string }) {
   );
 }
 
+const NAV_LINKS = [
+  { href: "#hvordan", label: "Hvordan" },
+  { href: "#funksjoner", label: "Funksjoner" },
+  { href: "#trygghet", label: "Trygghet" },
+  { href: "#innsikt", label: "Innsikt" },
+];
+
 export default function LandingPage() {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 antialiased">
 
       {/* Nav */}
-      <header className="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-slate-200">
+      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur border-b border-slate-200">
         <div className="mx-auto max-w-6xl px-5 sm:px-8 h-14 flex items-center justify-between gap-4">
           <a href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
             <Logo />
             <span className="font-bold text-base tracking-tight">Lønnskrav</span>
           </a>
           <nav className="hidden md:flex items-center gap-6 text-sm text-slate-600">
-            <a href="#hvordan" className="hover:text-slate-900 transition-colors">Hvordan</a>
-            <a href="#funksjoner" className="hover:text-slate-900 transition-colors">Funksjoner</a>
-            <a href="#trygghet" className="hover:text-slate-900 transition-colors">Trygghet</a>
-            <a href="#innsikt" className="hover:text-slate-900 transition-colors">Innsikt</a>
+            {NAV_LINKS.map(({ href, label }) => (
+              <a key={href} href={href} className="hover:text-slate-900 transition-colors">{label}</a>
+            ))}
           </nav>
-          <SignInCta
-            label="Logg inn"
-            className="h-9 px-4 rounded-xl bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-colors active:scale-[0.98]"
-          />
+          <div className="flex items-center gap-2">
+            <SignInCta
+              label="Logg inn"
+              className="h-9 px-4 rounded-xl bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-colors active:scale-[0.98]"
+            />
+            <button
+              onClick={() => setMobileNavOpen((v) => !v)}
+              className="md:hidden h-9 w-9 flex items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
+              aria-label="Meny"
+            >
+              {mobileNavOpen ? <XMarkIcon className="w-5 h-5" /> : <Bars3Icon className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobil-meny */}
+        {mobileNavOpen && (
+          <div className="md:hidden border-t border-slate-100 bg-white">
+            <nav className="mx-auto max-w-6xl px-5 py-3 flex flex-col">
+              {NAV_LINKS.map(({ href, label }) => (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={() => setMobileNavOpen(false)}
+                  className="py-3 text-sm font-medium text-slate-700 hover:text-slate-900 border-b border-slate-100 last:border-0 transition-colors"
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        )}
       </header>
 
       <main>
