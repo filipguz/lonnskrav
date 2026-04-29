@@ -18,23 +18,23 @@ const MOCK_SCORES = [
 const STEPS = [
   { icon: MagnifyingGlassIcon, title: "Søk opp virksomheten", body: "Skriv inn organisasjonsnummeret og hent selskapsdata og regnskap automatisk fra offentlige registre." },
   { icon: ChartBarIcon, title: "Analyser fire kriterier", body: "Systemet vurderer økonomi, produktivitet, fremtidsutsikter og konkurranseevne med sporbar logikk." },
-  { icon: DocumentTextIcon, title: "Få et redigerbart utkast", body: "AI formulerer et brev basert på dataene. Du beholder full kontroll og kan redigere fritt." },
+  { icon: DocumentTextIcon, title: "Rediger og bruk utkastet", body: "Du får et ferdig utkast til lønnskravbrev basert på dataene. Rediger fritt før du bruker det." },
 ];
 
 const FEATURES = [
   "Virksomhetsoppslag via Brønnøysundregisteret",
-  "Regnskapsdata fra Proff og offentlige kilder",
+  "Regnskapsdata fra offentlige kilder",
   "Automatisk scoring av fire forhandlingskriterier",
-  "Sporbar og forklarbar AI — ingen svarte bokser",
+  "Sporbar logikk — alle vurderinger kan etterprøves",
   "Redigerbart utkast til lønnskravbrev",
   "Fungerer på alle enheter, inkludert mobil",
 ];
 
 const TRUST_POINTS = [
-  "AI brukes til tekststøtte, ikke alene til beslutninger.",
-  "Alle vurderinger spores tilbake til dokumenterte kilder.",
-  "Usikkerhet i datagrunnlaget vises tydelig.",
-  "Brukeren beholder full kontroll over endelig krav.",
+  "Alle vurderinger er basert på offentlig tilgjengelige data.",
+  "Scoringen kan etterprøves — du ser hva den bygger på.",
+  "Usikkerhet i datagrunnlaget vises tydelig i resultatet.",
+  "Du beholder full kontroll over endelig krav og formulering.",
 ];
 
 function ScoreDot({ score }: { score: number }) {
@@ -99,7 +99,7 @@ export default function LandingPage() {
               </h1>
 
               <p className="mt-5 text-lg text-slate-600 leading-7 max-w-md">
-                Lønnskrav henter selskapsdata og regnskap automatisk, analyserer dem mot fire forhandlingskriterier og lager et redigerbart kravbrev med sporbare begrunnelser.
+                Lønnskrav henter selskapsdata og regnskap automatisk fra offentlige registre, analyserer fire forhandlingskriterier og gir deg et redigerbart utkast med sporbare begrunnelser.
               </p>
 
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
@@ -225,10 +225,10 @@ export default function LandingPage() {
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-emerald-600 mb-3">Trygghet</p>
                 <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">
-                  AI som hjelper,<br />ikke overtar.
+                  Data du kan<br />stole på.
                 </h2>
                 <p className="mt-4 text-lg text-slate-600 leading-7">
-                  Lønnskrav er laget for å styrke tillitsvalgtes eget arbeid — ikke erstatte vurderingene deres. Alle konklusjoner er forklart og sporbare.
+                  Lønnskrav er laget for å styrke tillitsvalgtes eget arbeid — ikke erstatte vurderingene deres. Alle konklusjoner bygger på offentlige data og er etterprøvbare.
                 </p>
                 <SignInButton mode="modal">
                   <button className="mt-8 h-12 px-6 rounded-2xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 transition-all active:scale-[0.98]">
