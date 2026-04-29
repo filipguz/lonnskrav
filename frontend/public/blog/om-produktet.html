@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hvorfor jeg bygde Lønnskrav — og hva som kommer | Filip Gustavsen</title>
-  <meta name="description" content="Filip Gustavsen, tidligere hovedtillitsvalgt i Parat i 7 år, forteller om ideen bak Lønnskrav, hva verktøyet gjør i dag og planen for å integrere AI i lokale lønnsforhandlinger." />
+  <title>Om Lønnskrav — idé og veikart | Lønnskrav</title>
+  <meta name="description" content="Kort om idéen bak Lønnskrav og hva som er planlagt fremover — AI-analyse, bransjestatistikk og mer." />
   <link rel="canonical" href="https://lonnskrav.no/blog/om-produktet.html" />
-  <meta property="og:title" content="Hvorfor jeg bygde Lønnskrav — og hva som kommer" />
-  <meta property="og:description" content="Filip Gustavsen om ideen bak Lønnskrav og veien videre med AI og statistikk." />
+  <meta property="og:title" content="Om Lønnskrav — idé og veikart" />
+  <meta property="og:description" content="Idéen bak Lønnskrav og hva som kommer." />
   <meta property="og:url" content="https://lonnskrav.no/blog/om-produktet.html" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Lønnskrav" />
@@ -15,9 +15,8 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Hvorfor jeg bygde Lønnskrav — og hva som kommer",
-    "description": "Filip Gustavsen om ideen bak Lønnskrav og veien videre med AI og statistikk.",
-    "author": { "@type": "Person", "name": "Filip Gustavsen", "url": "https://filipgustavsen.no" },
+    "headline": "Om Lønnskrav — idé og veikart",
+    "description": "Idéen bak Lønnskrav og hva som kommer.",
     "publisher": { "@type": "Organization", "name": "Lønnskrav", "url": "https://lonnskrav.no" },
     "mainEntityOfPage": "https://lonnskrav.no/blog/om-produktet.html"
   }
@@ -37,9 +36,7 @@
     .eyebrow { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #059669; margin-bottom: 1rem; }
     h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 800; line-height: 1.15; color: #0f172a; margin-bottom: 1.25rem; }
     .lead { font-size: 1.0625rem; color: #475569; line-height: 1.85; margin-bottom: 1.75rem; }
-    .meta { font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.5rem; display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: center; }
-    .author-line { font-size: 0.875rem; color: #64748b; margin-bottom: 2.5rem; }
-    .author-line a { color: #059669; }
+    .meta { font-size: 0.8rem; color: #94a3b8; margin-bottom: 2.5rem; display: flex; gap: 1.25rem; flex-wrap: wrap; align-items: center; }
     h2 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-top: 2.5rem; margin-bottom: 0.75rem; }
     p { margin-bottom: 1.25rem; font-size: 1rem; color: #334155; }
     ul, ol { margin: 0 0 1.25rem 1.5rem; }
@@ -71,49 +68,21 @@
   </nav>
 
   <article>
-    <p class="eyebrow">Bak produktet</p>
-    <h1>Hvorfor jeg bygde Lønnskrav — og hva som kommer</h1>
-    <p class="lead">Etter syv år som hovedtillitsvalgt i Parat kjenner jeg godt til frustrasjonen av å gå inn i lønnsforhandlinger uforberedt — ikke fordi man ikke bryr seg, men fordi det faktisk er vrient å sette seg inn i tallene. Det er den frustrasjonen Lønnskrav er bygget for å løse.</p>
+    <p class="eyebrow">Om produktet</p>
+    <h1>Idéen bak Lønnskrav — og hva som kommer</h1>
+    <p class="lead">All informasjon som trengs for å vurdere en virksomhets lønnsevne er offentlig tilgjengelig. Det som manglet var et verktøy som gjorde den forståelig og brukbar — på under ett minutt.</p>
     <div class="meta">
-      <span>6 min lesetid</span>
+      <span>3 min lesetid</span>
       <span>Produkthistorie</span>
     </div>
-    <p class="author-line">Av <a href="https://filipgustavsen.no" target="_blank" rel="noopener noreferrer">Filip Gustavsen</a> — utvikler og tidligere hovedtillitsvalgt i Parat (7 år)</p>
 
-    <h2>Problemet jeg kjente på kroppen</h2>
-    <p>Som hovedtillitsvalgt i Parat hadde jeg i syv år ansvaret for å forberede og gjennomføre lokale lønnsforhandlinger på vegne av kollegene mine. Hvert år var det samme øvelsen: finne frem årsrapporten, prøve å tolke regnskapstall jeg ikke hadde bakgrunn for å forstå fullt ut, og formulere et krav som virket troverdig — alt på siden av en travel arbeidsdag.</p>
-    <p>Arbeidsgiveren møtte alltid godt forberedt. De hadde HR, økonomiavdeling og ofte ekstern rådgivning i ryggen. Tillitsvalgte flest møtte med gode intensjoner og en utskrift fra Brønnøysundregisteret.</p>
-
-    <blockquote>
-      "Informasjonen har alltid vært offentlig tilgjengelig. Det som manglet var et verktøy som gjorde den forståelig og brukbar — på under ett minutt."
-    </blockquote>
-
-    <p>Det er ikke mangel på vilje som gjør at tillitsvalgte går inn i forhandlinger underutrustede. Det er mangel på tid og tilgang til riktig verktøy. Det er det Lønnskrav forsøker å bøte på.</p>
-
-    <h2>Ideen og det første steget</h2>
-    <p>Utgangspunktet var enkelt: all informasjonen som trengs for å vurdere en virksomhets lønnsevne er offentlig tilgjengelig. Brønnøysundregisteret og Regnskapsregisteret inneholder regnskap, egenkapital, antall ansatte og bransjedata for alle norske aksjeselskaper. Det er ingen hemmeligheter her — men det er heller ingen god brukeropplevelse for den som ikke er økonom.</p>
-    <p>Første versjon av Lønnskrav var et enkelt oppslag: skriv inn org.nr., hent data, vis nøkkeltall. Det løste et problem. Men det stilte fortsatt spørsmålet: <em>hva betyr egentlig disse tallene for lønnskravet mitt?</em></p>
-    <p>Neste steg var å bygge inn en scoringsmodell — en enkel, etterprøvbar logikk som vurderer økonomi, produktivitet, fremtidsutsikter og konkurranseevne basert på de offentlige tallene. Ikke en svart boks, men et begrunnet utgangspunkt du kan utfordre og justere. Alle terskelverdier og beregninger er <a href="/blog/metodikk.html">dokumentert åpent</a>.</p>
+    <h2>Bakgrunnen</h2>
+    <p>Tillitsvalgte går ofte inn i lønnsforhandlinger uten tilstrekkelig grunnlag — ikke fordi de ikke bryr seg, men fordi det er krevende å sette seg inn i regnskapstall på siden av en travel arbeidsdag. Arbeidsgivere møter gjerne godt forberedt, med HR og økonomiavdeling i ryggen.</p>
+    <p>Brønnøysundregisteret og Regnskapsregisteret inneholder regnskap, egenkapital, antall ansatte og bransjedata for alle norske aksjeselskaper. Lønnskrav ble bygget for å gjøre disse dataene tilgjengelige og forståelige — uten at man trenger å være økonom.</p>
 
     <h2>Der vi er nå</h2>
     <p>Lønnskrav er i dag et fungerende verktøy som brukes av tillitsvalgte i reelle forhandlinger. Du skriver inn org.nr., systemet henter selskapsdata og regnskap automatisk, og du får en vurdering av forhandlingsgrunnlaget med fire scorede kriterier og et redigerbart utkast til lønnskravbrev — klart til bruk på under ett minutt.</p>
     <p>Det er gratis og krever ingen installasjon. Det fungerer på mobil. Og dataene er alltid sporbare — du ser nøyaktig hva analysen bygger på.</p>
-    <p>At produktet allerede er sendt videre til tillitsvalgte for bruk i faktiske forhandlinger, er det beste beviset på at det fyller et reelt behov.</p>
-
-    <h2>Hva som kommer — AI i kjernen</h2>
-    <p>Dagens scoringsmodell er regelbasert: faste terskelverdier og logikk som er enkel å forstå og etterprøve. Det er en styrke — men det er også en begrensning. Modellen vet ikke noe om bransjenormer, lokale lønnsforhold, tariffhistorikk eller sammenhenger mellom bransjer over tid.</p>
-    <p>Neste store steg er å integrere en stor språkmodell (LLM) i analysekjernen. Det åpner for:</p>
-    <ul>
-      <li><strong>Kontekstuell analyse</strong> — AI som forstår bransjen, ikke bare teller tall</li>
-      <li><strong>Bedre utkasttekster</strong> — lønnskravbrev som faktisk leser som et brev skrevet av et menneske, tilpasset virksomhetens spesifikke situasjon</li>
-      <li><strong>Naturlig dialog</strong> — stille spørsmål til analysen og få svar: «Hva ville skjedd med scoren hvis årsresultatet var negativt?»</li>
-      <li><strong>Sammenligning mot bransje</strong> — «Er denne driftsmarginen høy eller lav for et selskap i denne sektoren?»</li>
-    </ul>
-    <p>AI-integrasjonen kommer som del av en betalt plan — kombinert med et enklere gratisnivå for de som trenger en rask oversikt.</p>
-
-    <h2>Statistikk og innsikt over tid</h2>
-    <p>En annen funksjon jeg ser frem til å bygge er aggregert statistikk: hva er gjennomsnittlig lønnsevne i en gitt bransje? Hvilke sektorer har hatt sterkest produktivitetsvekst? Hvilke virksomheter scorer systematisk høyt eller lavt?</p>
-    <p>Dette er data som i dag ikke finnes på ett sted i en form som er tilgjengelig for tillitsvalgte. Det kan Lønnskrav levere — fordi vi allerede henter og vurderer disse tallene for virksomhet etter virksomhet.</p>
 
     <h2>Veikart fremover</h2>
     <div style="margin: 1.5rem 0;">
@@ -155,7 +124,7 @@
       <div class="roadmap-item">
         <span class="roadmap-badge badge-later">Planlagt</span>
         <div class="roadmap-text">
-          <strong>Bransjstatistikk og benchmarking</strong>
+          <strong>Bransjestatistikk og benchmarking</strong>
           <span>Se din virksomhets nøkkeltall i kontekst av sektoren</span>
         </div>
       </div>
@@ -168,13 +137,9 @@
       </div>
     </div>
 
-    <h2>Et ord om åpenhet</h2>
-    <p>Lønnskrav er bevisst bygget på etterprøvbare data og transparent logikk. Verktøyet skal støtte tillitsvalgtes egne vurderinger — ikke erstatte dem. Alle scorer kan utfordres, alle tall kan spores tilbake til kilden, og utkastene er utgangspunkt, ikke fasit.</p>
-    <p>Det er slik det skal være. En tillitsvalgt som møter i forhandlinger med Lønnskrav i ryggen, skal forstå hva de presenterer — ikke bare lese opp fra en skjerm.</p>
-
     <hr />
 
-    <p>Har du tilbakemeldinger, forslag eller ønsker å komme i kontakt? Jeg hører gjerne fra deg på <a href="mailto:hei@filipgustavsen.no">hei@filipgustavsen.no</a>.</p>
+    <p>Har du tilbakemeldinger eller forslag? Ta kontakt på <a href="mailto:hei@lonnskrav.no">hei@lonnskrav.no</a>.</p>
 
     <div class="cta-box">
       <h3>Prøv Lønnskrav i dag</h3>
