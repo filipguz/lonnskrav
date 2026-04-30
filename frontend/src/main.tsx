@@ -6,7 +6,7 @@ import Vedlikehold from './Vedlikehold.tsx'
 import './index.css'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-const MAINTENANCE = true
+const MAINTENANCE = false
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
