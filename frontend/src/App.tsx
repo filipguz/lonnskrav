@@ -398,7 +398,7 @@ export default function App({
                         <button
                           onClick={(e) => { e.stopPropagation(); deleteCase(item.id); }}
                           disabled={deletingId === item.id}
-                          className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity ${
+                          className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity ${
                             active
                               ? "text-slate-400 hover:text-white hover:bg-white/10"
                               : "text-slate-400 hover:text-red-600 hover:bg-red-50"
