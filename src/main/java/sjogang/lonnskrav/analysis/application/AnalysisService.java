@@ -11,6 +11,12 @@ import java.util.Optional;
 @Service
 public class AnalysisService {
 
+    private final AiDraftService aiDraftService;
+
+    public AnalysisService(AiDraftService aiDraftService) {
+        this.aiDraftService = aiDraftService;
+    }
+
     public AnalysisResult analyze(NegotiationCase negotiationCase, Optional<RegnskapSnapshot> regnskap) {
         Company company = negotiationCase.getCompany();
 
@@ -153,7 +159,9 @@ public class AnalysisService {
         result.setProductivityRationale(productivityText.toString());
         result.setOutlookRationale(outlookText.toString());
         result.setCompetitivenessRationale(compText.toString());
-        result.setDraftText(buildDraft(nc, company, r, result));
+        String draft = aiDraftService.generateDraft(nc, company, Optional.of(r), result)
+                .orElseGet(() -> buildDraft(nc, company, r, result));
+        result.setDraftText(draft);
         return result;
     }
 
@@ -197,7 +205,9 @@ public class AnalysisService {
         result.setProductivityRationale(employees != null ? employees + " ansatte registrert." : "Ansattedata ikke tilgjengelig.");
         result.setOutlookRationale("Fremtidsutsikter vurdert ut fra bransje og organisasjonsform.");
         result.setCompetitivenessRationale(industry != null ? "Bransje: " + industry + "." : "Bransjedata ikke tilgjengelig.");
-        result.setDraftText(buildDraftOrgOnly(nc, company, result));
+        String draft = aiDraftService.generateDraft(nc, company, Optional.empty(), result)
+                .orElseGet(() -> buildDraftOrgOnly(nc, company, result));
+        result.setDraftText(draft);
         return result;
     }
 

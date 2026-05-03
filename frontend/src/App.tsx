@@ -132,6 +132,12 @@ export default function App({
   const [draftText, setDraftText] = useState("Foreløpig utkast til lønnskrav kommer her etter analyse.");
   const [showMobileCreate, setShowMobileCreate] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem("lonnskrav_welcomed"));
+
+  function dismissOnboarding() {
+    localStorage.setItem("lonnskrav_welcomed", "1");
+    setShowOnboarding(false);
+  }
 
   function copyDraft() {
     navigator.clipboard.writeText(draftText).then(() => {
@@ -545,6 +551,38 @@ export default function App({
           <ArrowPathIcon className="w-4 h-4" />
         </Button>
       </div>
+
+      {/* Onboarding */}
+      {showOnboarding && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 print:hidden">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={dismissOnboarding} />
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div className="flex items-center gap-3 mb-2">
+              <img src="/favicon.svg" alt="" className="h-8 w-8 shrink-0" />
+              <h2 className="text-xl font-bold text-slate-900">Velkommen til Lønnskrav</h2>
+            </div>
+            <p className="text-sm text-slate-500 mb-7">Verktøyet for tillitsvalgte i lokale forhandlinger.</p>
+            <ol className="space-y-4 mb-8">
+              {[
+                { n: "1", title: "Skriv inn org.nr.", desc: "Søk opp arbeidsgiveren — vi henter selskapsdata og regnskap automatisk." },
+                { n: "2", title: "Kjør analyse", desc: "Vi vurderer økonomi, produktivitet, fremtidsutsikter og konkurranseevne." },
+                { n: "3", title: "Kopier utkastet", desc: "AI skriver et profesjonelt lønnskravutkast du kan redigere og sende." },
+              ].map(({ n, title, desc }) => (
+                <li key={n} className="flex gap-4">
+                  <span className="flex-none w-7 h-7 rounded-full bg-slate-900 text-white text-sm font-bold flex items-center justify-center">{n}</span>
+                  <div>
+                    <div className="text-sm font-semibold text-slate-900">{title}</div>
+                    <div className="text-xs text-slate-500 mt-0.5">{desc}</div>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <Button variant="primary" fullWidth onClick={dismissOnboarding}>
+              Kom i gang
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white mt-0 hidden sm:block print:hidden">
