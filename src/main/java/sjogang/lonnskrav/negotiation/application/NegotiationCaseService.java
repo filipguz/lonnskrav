@@ -70,6 +70,11 @@ public class NegotiationCaseService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sak ikke funnet med id: " + id));
     }
 
+    public void deleteCase(Long id) {
+        NegotiationCase nc = getCaseById(id);
+        caseRepository.delete(nc);
+    }
+
     public AnalysisResult analyzeCase(Long id) {
         NegotiationCase nc = getCaseById(id);
 

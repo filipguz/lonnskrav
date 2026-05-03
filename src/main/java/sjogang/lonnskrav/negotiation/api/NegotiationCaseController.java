@@ -5,6 +5,7 @@ import sjogang.lonnskrav.analysis.domain.AnalysisResult;
 import sjogang.lonnskrav.negotiation.application.NegotiationCaseService;
 import sjogang.lonnskrav.negotiation.domain.NegotiationCase;
 import sjogang.lonnskrav.negotiation.dto.CreateCaseRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,12 @@ public class NegotiationCaseController {
     @GetMapping("/{id}")
     public NegotiationCase getById(@PathVariable Long id) {
         return caseService.getCaseById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        caseService.deleteCase(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/analyze")

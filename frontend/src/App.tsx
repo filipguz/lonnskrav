@@ -12,6 +12,7 @@ import {
   PrinterIcon,
   ClipboardDocumentIcon,
   CheckIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -130,9 +131,27 @@ export default function App({
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [draftText, setDraftText] = useState("Foreløpig utkast til lønnskrav kommer her etter analyse.");
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const [showMobileCreate, setShowMobileCreate] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem("lonnskrav_welcomed"));
+
+  async function deleteCase(id: number) {
+    try {
+      setDeletingId(id);
+      await apiFetch(`${API_BASE_URL}/api/cases/${id}`, { method: "DELETE" });
+      setCases((prev) => prev.filter((c) => c.id !== id));
+      if (selectedCase?.id === id) {
+        setSelectedCase(null);
+        setAnalysis(null);
+        setDraftText("Foreløpig utkast til lønnskrav kommer her etter analyse.");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Kunne ikke slette sak.");
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   function dismissOnboarding() {
     localStorage.setItem("lonnskrav_welcomed", "1");
@@ -352,26 +371,42 @@ export default function App({
                   {cases.map((item) => {
                     const active = selectedCase?.id === item.id;
                     return (
-                      <button
+                      <div
                         key={item.id}
-                        onClick={() => { setSelectedCase(item); setAnalysis(null); }}
-                        className={`w-full rounded-xl border p-4 text-left transition-all duration-150 group ${
+                        className={`relative rounded-xl border transition-all duration-150 group ${
                           active
                             ? "border-slate-900 bg-slate-900 text-white shadow-md"
                             : "border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm"
                         }`}
                       >
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="font-medium text-sm truncate">{item.title}</div>
-                          <span className={`text-xs shrink-0 tabular-nums ${active ? "text-slate-400" : "text-slate-400"}`}>#{item.id}</span>
-                        </div>
-                        <div className={`mt-1.5 text-xs flex items-center gap-1.5 ${active ? "text-slate-400" : "text-slate-500"}`}>
-                          <BuildingOffice2Icon className="w-3.5 h-3.5 shrink-0" />
-                          <span className="truncate">{item.company?.name ?? "Ukjent selskap"}</span>
-                          <span className="opacity-40">·</span>
-                          <span className="shrink-0">{item.negotiationYear}</span>
-                        </div>
-                      </button>
+                        <button
+                          onClick={() => { setSelectedCase(item); setAnalysis(null); }}
+                          className="w-full p-4 text-left pr-10"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="font-medium text-sm truncate">{item.title}</div>
+                            <span className="text-xs shrink-0 tabular-nums text-slate-400">#{item.id}</span>
+                          </div>
+                          <div className={`mt-1.5 text-xs flex items-center gap-1.5 ${active ? "text-slate-400" : "text-slate-500"}`}>
+                            <BuildingOffice2Icon className="w-3.5 h-3.5 shrink-0" />
+                            <span className="truncate">{item.company?.name ?? "Ukjent selskap"}</span>
+                            <span className="opacity-40">·</span>
+                            <span className="shrink-0">{item.negotiationYear}</span>
+                          </div>
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); deleteCase(item.id); }}
+                          disabled={deletingId === item.id}
+                          className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity ${
+                            active
+                              ? "text-slate-400 hover:text-white hover:bg-white/10"
+                              : "text-slate-400 hover:text-red-600 hover:bg-red-50"
+                          }`}
+                          title="Slett sak"
+                        >
+                          <TrashIcon className="w-4 h-4" />
+                        </button>
+                      </div>
                     );
                   })}
                 </div>
