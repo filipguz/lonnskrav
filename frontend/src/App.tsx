@@ -185,6 +185,7 @@ export default function App({
       const text = await response.text();
       throw new Error(text || `HTTP ${response.status}`);
     }
+    if (response.status === 204) return undefined as T;
     return response.json();
   }
 
