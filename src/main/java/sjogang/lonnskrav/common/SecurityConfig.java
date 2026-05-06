@@ -25,7 +25,8 @@ public class SecurityConfig {
             http
                     .authorizeHttpRequests(auth -> auth
                             .requestMatchers("/actuator/health", "/", "/index.html",
-                                    "/assets/**", "/favicon.svg", "/favicon.ico").permitAll()
+                                    "/assets/**", "/favicon.svg", "/favicon.ico",
+                                    "/blog", "/blog/**", "/sitemap.xml", "/robots.txt").permitAll()
                             .requestMatchers("/api/**").authenticated()
                             .anyRequest().permitAll()
                     )

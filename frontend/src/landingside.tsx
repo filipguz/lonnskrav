@@ -47,19 +47,19 @@ const FEATURES = [
 
 const ARTICLES = [
   {
-    href: "/blog/tillitsvalgt-lonnsforhandlinger/",
+    href: "/blog/tillitsvalgt-lonnsforhandlinger.html",
     readTime: 9,
     title: "Tillitsvalgt i lønnsforhandlinger: En komplett guide",
     excerpt: "Alt du trenger å vite — fra forberedelse og dokumentasjon til forhandlingsteknikk og protokollering.",
   },
   {
-    href: "/blog/lonnskrav-mal/",
+    href: "/blog/lonnskrav-mal.html",
     readTime: 7,
     title: "Lønnskrav mal: Slik skriver du et dokumentert og overbevisende krav",
     excerpt: "Struktur, mal og konkrete eksempler på et lønnskrav som er forankret i virksomhetens egne tall.",
   },
   {
-    href: "/blog/tariffoppgjor-2026/",
+    href: "/blog/tariffoppgjor-2026.html",
     readTime: 6,
     title: "Tariffoppgjøret 2026: Hva betyr resultatet for lokale forhandlinger?",
     excerpt: "Frontfagsrammen er satt. Her forklarer vi hva det betyr lokalt — og når du kan argumentere for mer.",
