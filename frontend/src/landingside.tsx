@@ -47,10 +47,22 @@ const FEATURES = [
 
 const ARTICLES = [
   {
-    href: "/blog/om-produktet.html",
+    href: "/blog/tillitsvalgt-lonnsforhandlinger/",
+    readTime: 9,
+    title: "Tillitsvalgt i lønnsforhandlinger: En komplett guide",
+    excerpt: "Alt du trenger å vite — fra forberedelse og dokumentasjon til forhandlingsteknikk og protokollering.",
+  },
+  {
+    href: "/blog/lonnskrav-mal/",
+    readTime: 7,
+    title: "Lønnskrav mal: Slik skriver du et dokumentert og overbevisende krav",
+    excerpt: "Struktur, mal og konkrete eksempler på et lønnskrav som er forankret i virksomhetens egne tall.",
+  },
+  {
+    href: "/blog/tariffoppgjor-2026/",
     readTime: 6,
-    title: "Hvorfor jeg bygde Lønnskrav — og hva som kommer",
-    excerpt: "Filip Gustavsen, tidligere hovedtillitsvalgt i Parat i 7 år, om ideen bak produktet, hva det gjør i dag og planen for AI-integrasjon og statistikk.",
+    title: "Tariffoppgjøret 2026: Hva betyr resultatet for lokale forhandlinger?",
+    excerpt: "Frontfagsrammen er satt. Her forklarer vi hva det betyr lokalt — og når du kan argumentere for mer.",
   },
   {
     href: "/blog/lokale-lonnsforhandlinger.html",
@@ -75,6 +87,12 @@ const ARTICLES = [
     readTime: 7,
     title: "Slik beregnes de fire kriteriene",
     excerpt: "En transparent gjennomgang av scoringsmodellen — alle terskelverdier, datakilder og hva som skjer når regnskap ikke er tilgjengelig.",
+  },
+  {
+    href: "/blog/om-produktet.html",
+    readTime: 6,
+    title: "Hvorfor jeg bygde Lønnskrav — og hva som kommer",
+    excerpt: "Filip Gustavsen, tidligere hovedtillitsvalgt i Parat i 7 år, om ideen bak produktet, hva det gjør i dag og planen for AI-integrasjon og statistikk.",
   },
 ];
 
