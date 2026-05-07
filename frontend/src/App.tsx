@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { Show, UserButton, useAuth } from "@clerk/react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { AnalysePdf } from "./AnalysePdf";
 import LandingPage from "./landingside";
 import {
   BriefcaseIcon,
@@ -13,6 +15,7 @@ import {
   ClipboardDocumentIcon,
   CheckIcon,
   TrashIcon,
+  ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
 import {
   Card,
@@ -533,6 +536,27 @@ export default function App({
                     : <><ClipboardDocumentIcon className="w-4 h-4" />Kopier</>
                   }
                 </button>
+                {analysis && selectedCase && (
+                  <PDFDownloadLink
+                    document={
+                      <AnalysePdf
+                        negotiationCase={selectedCase}
+                        analysis={analysis}
+                        draftText={draftText}
+                        averageScore={String(averageScore)}
+                      />
+                    }
+                    fileName={`lonnskrav-${selectedCase.company?.name ?? selectedCase.id}-${selectedCase.negotiationYear}.pdf`}
+                    className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors"
+                  >
+                    {({ loading }) => (
+                      <>
+                        <ArrowDownTrayIcon className="w-4 h-4" />
+                        {loading ? "Genererer..." : "Last ned PDF"}
+                      </>
+                    )}
+                  </PDFDownloadLink>
+                )}
                 <button
                   onClick={() => window.print()}
                   className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors"
