@@ -12,6 +12,7 @@ import sjogang.lonnskrav.negotiation.dto.CreateCaseRequest;
 import sjogang.lonnskrav.negotiation.infrastructure.NegotiationCaseRepository;
 import sjogang.lonnskrav.regnskap.application.RegnskapDataProvider;
 import sjogang.lonnskrav.regnskap.domain.RegnskapSnapshot;
+import sjogang.lonnskrav.subscription.application.SubscriptionService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ public class NegotiationCaseService {
     private final CompanyDataService companyDataService;
     private final RegnskapDataProvider regnskapDataProvider;
     private final UserContextService userContextService;
+    private final SubscriptionService subscriptionService;
 
     public NegotiationCase createCase(CreateCaseRequest request) {
         String userId = userContextService.getCurrentUserId();
@@ -76,6 +78,9 @@ public class NegotiationCaseService {
     }
 
     public AnalysisResult analyzeCase(Long id) {
+        String userId = userContextService.getCurrentUserId();
+        subscriptionService.checkAndIncrementAnalysis(userId);
+
         NegotiationCase nc = getCaseById(id);
 
         Optional<RegnskapSnapshot> regnskap = Optional.empty();

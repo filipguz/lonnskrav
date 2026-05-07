@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Show, UserButton, useAuth } from "@clerk/react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { AnalysePdf } from "./AnalysePdf";
+import { UpgradeModal } from "./UpgradeModal";
 import LandingPage from "./landingside";
 import {
   BriefcaseIcon,
@@ -68,6 +69,13 @@ type AnalysisResult = {
   regnskapYear?: number;
   valuta?: string;
   draftText?: string;
+};
+
+type SubscriptionStatus = {
+  plan: "FREE" | "PRO";
+  analysesUsed: number;
+  freeLimit: number;
+  canRunAnalysis: boolean;
 };
 
 type CreateCaseForm = {
@@ -138,6 +146,8 @@ export default function App({
   const [showMobileCreate, setShowMobileCreate] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(() => !localStorage.getItem("lonnskrav_welcomed"));
+  const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   async function deleteCase(id: number) {
     try {
@@ -174,6 +184,25 @@ export default function App({
     return (total / 4).toFixed(1);
   }, [analysis]);
 
+  useEffect(() => {
+    loadCases();
+    loadSubscriptionStatus();
+    if (new URLSearchParams(window.location.search).get("checkout") === "success") {
+      window.history.replaceState({}, "", window.location.pathname);
+      setTimeout(() => loadSubscriptionStatus(), 2000);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function loadSubscriptionStatus() {
+    try {
+      const data = await apiFetch<SubscriptionStatus>(`${API_BASE_URL}/api/subscription/status`);
+      setSubscriptionStatus(data);
+    } catch {
+      // ikke kritisk
+    }
+  }
+
   async function apiFetch<T>(url: string, options?: RequestInit): Promise<T> {
     const token = await getToken();
     const response = await fetch(url, {
@@ -186,7 +215,9 @@ export default function App({
     });
     if (!response.ok) {
       const text = await response.text();
-      throw new Error(text || `HTTP ${response.status}`);
+      const err = new Error(text || `HTTP ${response.status}`);
+      (err as any).status = response.status;
+      throw err;
     }
     if (response.status === 204) return undefined as T;
     return response.json();
@@ -242,8 +273,13 @@ export default function App({
       const result = await apiFetch<AnalysisResult>(`${API_BASE_URL}/api/cases/${caseId}/analyze`);
       setAnalysis(result);
       if (result.draftText) setDraftText(result.draftText);
+      await loadSubscriptionStatus();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Kunne ikke kjøre analyse.");
+      if ((err as any).status === 402) {
+        setShowUpgrade(true);
+      } else {
+        setError(err instanceof Error ? err.message : "Kunne ikke kjøre analyse.");
+      }
     } finally {
       setAnalyzing(false);
     }
@@ -314,6 +350,20 @@ export default function App({
             </div>
           </button>
           <div className="flex items-center gap-2">
+            {subscriptionStatus && (
+              subscriptionStatus.plan === "PRO" ? (
+                <span className="hidden sm:inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+                  ⚡ Pro
+                </span>
+              ) : (
+                <button
+                  onClick={() => setShowUpgrade(true)}
+                  className="hidden sm:inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-full transition-colors"
+                >
+                  Gratis · {subscriptionStatus.analysesUsed}/{subscriptionStatus.freeLimit}
+                </button>
+              )
+            )}
             <Button variant="secondary" onClick={loadCases} loading={loadingCases} className="hidden sm:inline-flex h-9 px-3.5 text-xs">
               <ArrowPathIcon className="w-3.5 h-3.5" />
               Hent saker
@@ -652,11 +702,40 @@ export default function App({
             <a href="https://github.com/filipguz" className="font-medium text-slate-600 hover:text-slate-900" target="_blank" rel="noopener noreferrer">filipguz</a>
           </span>
           <div className="flex gap-4 text-xs text-slate-400">
+            {subscriptionStatus?.plan === "PRO" && (
+              <button
+                onClick={async () => {
+                  try {
+                    const token = await getToken();
+                    const res = await fetch(`${API_BASE_URL}/api/subscription/portal`, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                      },
+                      body: JSON.stringify({ returnUrl: window.location.href }),
+                    });
+                    if (res.ok) { const { url } = await res.json(); window.location.href = url; }
+                  } catch { /* ignore */ }
+                }}
+                className="hover:text-slate-900 transition-colors"
+              >
+                Administrer abonnement
+              </button>
+            )}
             <a href="mailto:hei@filipgustavsen.no" className="hover:text-slate-900">hei@filipgustavsen.no</a>
             <a href="https://filipgustavsen.no" className="hover:text-slate-900" target="_blank" rel="noopener noreferrer">filipgustavsen.no</a>
           </div>
         </div>
       </footer>
+
+      {showUpgrade && (
+        <UpgradeModal
+          onClose={() => setShowUpgrade(false)}
+          apiBase={API_BASE_URL}
+          getToken={getToken}
+        />
+      )}
     </div>
   );
 }

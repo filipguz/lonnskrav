@@ -27,6 +27,7 @@ public class SecurityConfig {
                             .requestMatchers("/actuator/health", "/", "/index.html",
                                     "/assets/**", "/favicon.svg", "/favicon.ico",
                                     "/blog", "/blog/**", "/sitemap.xml", "/robots.txt").permitAll()
+                            .requestMatchers("/api/stripe/webhook").permitAll()
                             .requestMatchers("/api/**").authenticated()
                             .anyRequest().permitAll()
                     )
