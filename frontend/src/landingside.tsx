@@ -132,7 +132,7 @@ function SignInCta({ label, className }: { label: string; className: string }) {
 const NAV_LINKS = [
   { href: "#hvordan", label: "Hvordan" },
   { href: "#funksjoner", label: "Funksjoner" },
-  { href: "#trygghet", label: "Trygghet" },
+  { href: "#pris", label: "Pris" },
   { href: "#innsikt", label: "Innsikt" },
 ];
 
@@ -353,6 +353,77 @@ export default function LandingPage() {
                     <p className="text-sm leading-6 text-slate-700">{point}</p>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Pris ── */}
+        <section id="pris" className="bg-slate-50 border-t border-slate-200">
+          <div className="mx-auto max-w-6xl px-5 sm:px-8 py-16 sm:py-24">
+            <div className="max-w-xl mb-10 sm:mb-12">
+              <p className="text-xs font-semibold uppercase tracking-widest text-emerald-600 mb-3">Pris</p>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-950">Enkel og forutsigbar prising</h2>
+              <p className="mt-4 text-base text-slate-600 leading-7">
+                Start gratis. Oppgrader når du trenger mer.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2 max-w-2xl">
+
+              {/* Gratis */}
+              <div className="rounded-2xl border border-slate-200 bg-white p-7 flex flex-col shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Gratis</p>
+                <div className="flex items-end gap-1 mb-1">
+                  <span className="text-4xl font-bold text-slate-900">0 kr</span>
+                </div>
+                <p className="text-sm text-slate-400 mb-6">For å prøve</p>
+                <ul className="space-y-3 mb-8 flex-1">
+                  {[
+                    "3 analyser inkludert",
+                    "Alle 4 forhandlingskriterier",
+                    "AI-generert lønnskravutkast",
+                    "PDF-eksport",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm text-slate-700">
+                      <CheckIcon className="w-4 h-4 text-emerald-500 shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <SignInCta
+                  label="Kom i gang gratis"
+                  className="w-full h-11 rounded-xl border border-slate-300 bg-white text-slate-800 text-sm font-semibold hover:bg-slate-50 hover:border-slate-400 transition-colors"
+                />
+              </div>
+
+              {/* Pro */}
+              <div className="rounded-2xl bg-slate-900 p-7 flex flex-col shadow-xl relative overflow-hidden">
+                <div className="absolute top-4 right-4 bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">
+                  Anbefalt
+                </div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-1">Pro</p>
+                <div className="flex items-end gap-1 mb-1">
+                  <span className="text-4xl font-bold text-white">499 kr</span>
+                </div>
+                <p className="text-sm text-slate-400 mb-6">per år · avslutt når som helst</p>
+                <ul className="space-y-3 mb-8 flex-1">
+                  {[
+                    "Alt i Gratis",
+                    "Ubegrenset antall analyser",
+                    "Ubegrenset antall saker",
+                    "Tilgang gjennom hele forhandlingsåret",
+                  ].map((item) => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm text-slate-300">
+                      <CheckIcon className="w-4 h-4 text-emerald-400 shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <SignInCta
+                  label="Kom i gang"
+                  className="w-full h-11 rounded-xl bg-white text-slate-900 text-sm font-semibold hover:bg-slate-100 transition-colors"
+                />
               </div>
             </div>
           </div>
