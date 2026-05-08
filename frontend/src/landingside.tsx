@@ -437,7 +437,7 @@ export default function LandingPage() {
               <h2 className="text-3xl font-bold tracking-tight text-slate-950">Les mer om lønnsforhandlinger</h2>
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
-              {ARTICLES.map(({ href, readTime, title, excerpt }) => (
+              {ARTICLES.slice(0, 3).map(({ href, readTime, title, excerpt }) => (
                 <a
                   key={href}
                   href={href}
@@ -449,6 +449,14 @@ export default function LandingPage() {
                   <span className="text-xs font-medium text-emerald-600">Les artikkelen →</span>
                 </a>
               ))}
+            </div>
+            <div className="mt-8 text-center">
+              <a
+                href="/blog"
+                className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 border border-slate-200 bg-white hover:border-slate-300 px-5 py-2.5 rounded-xl transition-colors shadow-sm"
+              >
+                Se alle artikler →
+              </a>
             </div>
           </div>
         </section>
