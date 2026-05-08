@@ -2,51 +2,101 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lonnskrav.no/</loc>
+    <lastmod>2026-05-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://lonnskrav.no/blog/</loc>
+    <loc>https://lonnskrav.no/blog/index.html</loc>
+    <lastmod>2026-05-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <!-- Nye artikler 2026-05-08 -->
   <url>
-    <loc>https://lonnskrav.no/blog/lokale-lonnsforhandlinger/</loc>
+    <loc>https://lonnskrav.no/blog/god-lonnsokning-2026.html</loc>
+    <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://lonnskrav.no/blog/frontfagsmodellen/</loc>
+    <loc>https://lonnskrav.no/blog/lonnskrav-mal-word.html</loc>
+    <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://lonnskrav.no/blog/regnskap-og-lonnskrav/</loc>
+    <loc>https://lonnskrav.no/blog/kan-arbeidsgiver-nekte.html</loc>
+    <lastmod>2026-05-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://lonnskrav.no/blog/tariffoppgjor-2026/</loc>
+    <loc>https://lonnskrav.no/blog/lonnskrav-avvist.html</loc>
+    <lastmod>2026-05-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lonnskrav.no/blog/tillitsvalgt-rettigheter.html</loc>
+    <lastmod>2026-05-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lonnskrav.no/blog/lonnsforhandling-protokoll.html</loc>
+    <lastmod>2026-05-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Eksisterende artikler -->
+  <url>
+    <loc>https://lonnskrav.no/blog/tillitsvalgt-lonnsforhandlinger/</loc>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://lonnskrav.no/blog/lonnskrav-mal/</loc>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://lonnskrav.no/blog/tillitsvalgt-lonnsforhandlinger/</loc>
+    <loc>https://lonnskrav.no/blog/tariffoppgjor-2026/</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lonnskrav.no/blog/lokale-lonnsforhandlinger/</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lonnskrav.no/blog/regnskap-og-lonnskrav/</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lonnskrav.no/blog/frontfagsmodellen/</loc>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://lonnskrav.no/blog/metodikk/</loc>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://lonnskrav.no/blog/om-produktet/</loc>
+    <lastmod>2026-05-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
