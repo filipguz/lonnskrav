@@ -47,6 +47,42 @@ const FEATURES = [
 
 const ARTICLES = [
   {
+    href: "/blog/god-lonnsokning-2026.html",
+    readTime: 5,
+    title: "Hva er en god lønnsøkning i 2026?",
+    excerpt: "Frontfagsrammen er satt. Men hva betyr det for deg — og når er det grunnlag for å kreve mer enn rammen lokalt?",
+  },
+  {
+    href: "/blog/lonnskrav-mal-word.html",
+    readTime: 6,
+    title: "Lønnskrav mal Word — struktur og tekst du kan bruke direkte",
+    excerpt: "Komplett lønnskrav mal du kan kopiere inn i Word eller e-post. Innledning, dokumentasjon, argumentasjon og selve kravet.",
+  },
+  {
+    href: "/blog/kan-arbeidsgiver-nekte.html",
+    readTime: 5,
+    title: "Kan arbeidsgiver nekte lønnsforhandlinger?",
+    excerpt: "Nei — ikke med tariffavtale. Her er hva arbeidsgiver kan og ikke kan gjøre, og stegene du tar hvis de nekter.",
+  },
+  {
+    href: "/blog/lonnskrav-avvist.html",
+    readTime: 7,
+    title: "Lønnskrav avvist — hva gjør du nå?",
+    excerpt: "Arbeidsgiver sier nei. Her er stegene fra første avvisning til forhandlingsbrudd og mekling — med frister og dokumentasjonskrav.",
+  },
+  {
+    href: "/blog/tillitsvalgt-rettigheter.html",
+    readTime: 8,
+    title: "Tillitsvalgt rettigheter i lønnsforhandlinger",
+    excerpt: "Forhandlingsrett, informasjonsrett, møtetid og protokollrett — hva loven og tariffavtalen faktisk gir deg.",
+  },
+  {
+    href: "/blog/lonnsforhandling-protokoll.html",
+    readTime: 6,
+    title: "Lønnsforhandling protokoll — mal og guide",
+    excerpt: "Protokollen er det juridisk bindende beviset på hva som ble avtalt. Mal for enighetsprotokoll og bruddprotokoll.",
+  },
+  {
     href: "/blog/tillitsvalgt-lonnsforhandlinger.html",
     readTime: 9,
     title: "Tillitsvalgt i lønnsforhandlinger: En komplett guide",
