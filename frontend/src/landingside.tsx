@@ -452,7 +452,7 @@ export default function LandingPage() {
             </div>
             <div className="mt-8 text-center">
               <a
-                href="/blog"
+                href="/blog/index.html"
                 className="inline-flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-slate-900 border border-slate-200 bg-white hover:border-slate-300 px-5 py-2.5 rounded-xl transition-colors shadow-sm"
               >
                 Se alle artikler →
